@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">BodyTrack</string>
+
+    <string name="title">BODYTRACK!</string>
+    <string name="gpsButton">GPS Tracking</string>    
+    <string name="barcodeButton">Scan food barcode</string>    
+    <string name="pixButton">Take meal picture</string>    
+  
+</resources>
