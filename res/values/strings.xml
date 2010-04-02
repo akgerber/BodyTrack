@@ -6,5 +6,6 @@
     <string name="gpsButton">GPS Tracking</string>    
     <string name="barcodeButton">Scan food barcode</string>    
     <string name="pixButton">Take meal picture</string>    
+    <string name="dataButton">SHOW ME THE DATA</string>    
   
 </resources>
