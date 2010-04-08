@@ -11,7 +11,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
 
-public class GPSService extends Service{
+public class gpsService extends Service{
 	/*constants*/
 	private final long minTime = 5;
 	private final long minDistance = 10;

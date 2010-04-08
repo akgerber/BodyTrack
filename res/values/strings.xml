@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">BodyTrack</string>
-
+	<!-- Main activity values -->
     <string name="title">BODYTRACK!</string>
     <string name="gpsButton">GPS Tracking</string>    
     <string name="barcodeButton">Scan food barcode</string>    
     <string name="pixButton">Take meal picture</string>    
-    <string name="dataButton">SHOW ME THE DATA</string>    
-  
+    <string name="dataButton">SHOW ME THE DATA</string>
+    
+    <!-- GPS Service control activity values -->
+    <string name="gpsTitle">Stop GPS Tracking</string>        
+    <string name="gpsSvcStartButton">Start GPS Tracking</string>    
+    <string name="gpsSvcStopButton">Stop GPS Tracking</string>    
+  	
 </resources>

@@ -14,7 +14,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class BodyTrackHome extends Activity{
+public class gpsSvcControl extends Activity{
 	static final int DAAANG = 0;
 	
 	protected Dialog onCreateDialog(int id) {
@@ -37,27 +37,15 @@ public class BodyTrackHome extends Activity{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
-        
-        /*Initialize buttons & set methods*/
-        Button gpsButton = (Button)findViewById(R.id.gpsButton);
-        Button barcodeButton = (Button)findViewById(R.id.barcodeButton);
-        Button dataButton = (Button)findViewById(R.id.dataButton);
-
-        gpsButton.setOnClickListener(mGotoGps);
-        barcodeButton.setOnClickListener(mScanBarcode);
-        dataButton.setOnClickListener(mShowData);
+        setContentView(R.layout.gpscontrol);
+        Button gpsSvcStartButton = (Button)findViewById(R.id.gpsSvcStartButton);
+        Button gpsSvcStopButton = (Button)findViewById(R.id.gpsSvcStopButton);
+        gpsSvcStartButton.setOnClickListener(mStartSvc);
+        gpsSvcStopButton.setOnClickListener(mStopSvc);
 
     }
-
-    private Button.OnClickListener mGotoGps = new Button.OnClickListener(){
-	    public void onClick(View v) {
-	    	Intent intent = new Intent(getApplicationContext(), gpsSvcControl.class);
-	    	startActivity(intent);
-	    }
-    };    
     
-    private Button.OnClickListener mScanBarcode = new Button.OnClickListener(){
+    private Button.OnClickListener mStartSvc = new Button.OnClickListener(){
 	    public void onClick(View v) {
 	    	Intent intent = new Intent("com.google.zxing.client.android.SCAN");
 	    	intent.putExtra("SCAN_MODE", "PRODUCT_MODE");
@@ -66,13 +54,13 @@ public class BodyTrackHome extends Activity{
 	    }
     };
     
-    private Button.OnClickListener mShowData = new Button.OnClickListener(){
+    private Button.OnClickListener mStopSvc = new Button.OnClickListener(){
 	    public void onClick(View v) {
-	    	showData();
+	    	
 	    }
     };
     
-    private void showData(){
+/*    private void showData(){
     	try {
     		FileInputStream bcFile = this.openFileInput("barcodes.csv");
     		InputStreamReader reader = new InputStreamReader(bcFile);
@@ -104,10 +92,10 @@ public class BodyTrackHome extends Activity{
         			} catch (Exception e) { showDialog("File did not close out");}
         		}
 			}
-    		catch (FileNotFoundException e) {/*TODO*/}
+    		catch (FileNotFoundException e) {}
 		} else {
 			showDialog("aww snap");
 		}
-    }
+    }*/
     
 }
