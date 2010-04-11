@@ -10,9 +10,11 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 
-public class gpsService extends Service{
+public class GpsService extends Service{
 	/*constants*/
+	private static final String TAG = "GpsService";
 	private final long minTime = 5;
 	private final long minDistance = 10;
 	
@@ -25,17 +27,16 @@ public class gpsService extends Service{
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		
-		Context myContext = getApplicationContext();
-		
+    	Log.v(TAG, "Starting GPS service");
+				
 		/*Get an instance of the location manager*/
-		locMan = (LocationManager)myContext.getSystemService(Context.LOCATION_SERVICE);
+		locMan = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
 		locListen = new myLocListen();
 		
 		try{
-		gpsFile = openFileOutput("barcodes.csv", MODE_APPEND);
+			gpsFile = openFileOutput("barcodes.csv", MODE_APPEND);
 		} catch(Exception e) {
-			
+	    	Log.e(TAG, "Failed to open file; exception: " + e.toString());	
 		}
 
 	}
@@ -52,6 +53,8 @@ public class gpsService extends Service{
 	
 	/*TODO: check for races*/
 	private void startLogging() {
+    	Log.v(TAG, "Starting GPS logging");
+
 		/*Register the location listener with the location manager*/
 		if (!isLogging) {
 			locMan.requestLocationUpdates(LocationManager.GPS_PROVIDER, minTime, minDistance, locListen);
@@ -60,6 +63,8 @@ public class gpsService extends Service{
 	}
 	
 	private void stopLogging() {
+    	Log.v(TAG, "Stopping GPS logging");
+
 		/*Stop getting location updates*/
 		if (isLogging) {
 			locMan.removeUpdates(locListen);
@@ -104,15 +109,15 @@ public class gpsService extends Service{
 	 */
 	private IBinder rpcBinder = new IGPSSvcRPC.Stub(){
 		public void startLogging() {
-			GPSService.this.startLogging();
+			GpsService.this.startLogging();
 		}
 		
 		public void stopLogging() {
-			GPSService.this.stopLogging();
+			GpsService.this.stopLogging();
 		}
 		
 		public boolean isLogging() {
-			return GPSService.this.isLogging;
+			return GpsService.this.isLogging;
 		}
 	};
 		

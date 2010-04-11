@@ -7,39 +7,23 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
 public class BodyTrackHome extends Activity{
-	static final int DAAANG = 0;
-	
-	protected Dialog onCreateDialog(int id) {
-		Dialog d;
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		builder.setMessage("SCANT.");
-		d = builder.create();
-		return d;
-	}
-	
-	private void showDialog(String message) {
-	    AlertDialog.Builder builder = new AlertDialog.Builder(this);
-	    builder.setMessage(message);
-	    builder.setPositiveButton("OK", null);
-	    builder.show();
-	}
-	
+	private static final String TAG = "BodyTrackHome";
 	
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.v(TAG, "Starting BodyTrackHome activity");
         setContentView(R.layout.main);
         
-        /*Initialize buttons & set methods*/
+        /*Set button handlers*/
         Button gpsButton = (Button)findViewById(R.id.gpsButton);
         Button barcodeButton = (Button)findViewById(R.id.barcodeButton);
         Button dataButton = (Button)findViewById(R.id.dataButton);
@@ -50,28 +34,33 @@ public class BodyTrackHome extends Activity{
 
     }
 
+    /*Handles the GPS button: goes to the GPS service control activity*/
     private Button.OnClickListener mGotoGps = new Button.OnClickListener(){
 	    public void onClick(View v) {
-	    	Intent intent = new Intent(getApplicationContext(), gpsSvcControl.class);
+	    	Log.v(TAG, "BodyTrackHome starting GPS service control");
+	    	Intent intent = new Intent(getApplicationContext(), GpsSvcControl.class);
 	    	startActivity(intent);
 	    }
     };    
     
+    /*Handles the barcode button: Requests the ZXing app scan a barcode*/
     private Button.OnClickListener mScanBarcode = new Button.OnClickListener(){
 	    public void onClick(View v) {
+	    	Log.v(TAG, "BodyTrackHome starting ZXing for barcode scan");	    	
 	    	Intent intent = new Intent("com.google.zxing.client.android.SCAN");
 	    	intent.putExtra("SCAN_MODE", "PRODUCT_MODE");
 	    	startActivityForResult(intent,0);
-	    	//showDialog(DAAANG);
 	    }
     };
     
+    /*Handles the show data button: */
     private Button.OnClickListener mShowData = new Button.OnClickListener(){
 	    public void onClick(View v) {
 	    	showData();
 	    }
     };
     
+    /*Shows logged barcodes*/
     private void showData(){
     	try {
     		FileInputStream bcFile = this.openFileInput("barcodes.csv");
@@ -82,31 +71,40 @@ public class BodyTrackHome extends Activity{
     		{
     			data.append(buf.toString() + "\n");
     		}
-    		showDialog(data.toString());
-    	} catch(Exception e) {showDialog(e.toString());}
+    		Utilities.showDialog(data.toString(), this);
+    	} catch(Exception e) {Utilities.showDialog(e.toString(), this);}
     }
     
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+    	Log.v(TAG, "BodyTrackHome receiving activity result");	    	
 		if (resultCode == RESULT_OK) {
 			try {
 	    		FileOutputStream bcFile = this.openFileOutput("barcodes.csv", MODE_APPEND);
 	    		OutputStreamWriter writer = new OutputStreamWriter(bcFile);
     			String code = intent.getStringExtra("SCAN_RESULT");
-        		//showDialog("hey" + code);
         		try {
         			writer.write(code);
-        		} catch(Exception e){ showDialog("FILE FAIL");}	
+        		} catch(Exception e) { 
+        	    	Log.e(TAG, "Failed to write to file; exception:" + e.toString());
+        			Utilities.showDialog("FILE FAIL", this);
+        			}	
         		finally {
         			try {
         				writer.close();
         				bcFile.close();
-        			} catch (Exception e) { showDialog("File did not close out");}
+        			} catch (Exception e) {
+            	    	Log.e(TAG, "Failed to close files:" + e.toString());
+        				Utilities.showDialog("File did not close out", this);
+        			}
         		}
 			}
-    		catch (FileNotFoundException e) {/*TODO*/}
+    		catch (FileNotFoundException e) {
+    	    	Log.e(TAG, "File not found; exception:" + e.toString());
+    		}
 		} else {
-			showDialog("aww snap");
+	    	Log.v(TAG, "Unexpected activity result");
+			Utilities.showDialog("aww snap", this);
 		}
     }
     
