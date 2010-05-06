@@ -4,17 +4,23 @@ import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class GpsSvcControl extends Activity{
 	private static final String TAG = "GpsSvcControl";
 	private Button gpsSvcStartButton;
 	private Button gpsSvcStopButton;
+	private Button gpsShowButton;
+	private TextView Outbox;
 	private IGPSSvcRPC gpsBinder;
+	protected BTDbAdapter dbAdapter;
+
 	
     /** Called when the activity is first created. */
     @Override
@@ -28,6 +34,12 @@ public class GpsSvcControl extends Activity{
         gpsSvcStartButton.setOnClickListener(mStartSvc);
         gpsSvcStopButton.setOnClickListener(mStopSvc);
         gpsSvcStopButton.setEnabled(false);
+        gpsShowButton = (Button)findViewById(R.id.gpsShowButton);
+        gpsShowButton.setOnClickListener(showData);
+        Outbox = (TextView)findViewById(R.id.Outbox);
+        
+		dbAdapter = new BTDbAdapter(this).open();
+
     }
     
     private void startGps() {
@@ -58,6 +70,27 @@ public class GpsSvcControl extends Activity{
     private Button.OnClickListener mStartSvc = new Button.OnClickListener(){
 	    public void onClick(View v) {
 	    	startGps();
+	    }
+    };
+ 
+    private Button.OnClickListener showData = new Button.OnClickListener(){
+	    public void onClick(View v) {
+	    	Outbox.setText("");
+	    	Cursor geodata = dbAdapter.fetchAllLocations();
+	    	geodata.moveToFirst();
+	    	String names = "";
+	    	String [] namesArr = geodata.getColumnNames();
+	    	for (String name : namesArr) {
+	    		names = names + name;
+	    	}
+	    	Outbox.append(names);
+	    	while (geodata.isAfterLast() == false) {
+	    		Outbox.append("\n" + geodata.getString(geodata.getColumnIndex("latitude")) + ", " 
+	    			+ geodata.getString(geodata.getColumnIndex("longitude")) 
+	    			+ "; acc:" + geodata.getString(geodata.getColumnIndex("accuracy")));
+	    		geodata.moveToNext();
+	    	}
+	    	geodata.close();
 	    }
     };
     

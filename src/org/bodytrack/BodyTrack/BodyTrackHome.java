@@ -26,9 +26,11 @@ public class BodyTrackHome extends Activity{
         /*Set button handlers*/
         Button gpsButton = (Button)findViewById(R.id.gpsButton);
         Button barcodeButton = (Button)findViewById(R.id.barcodeButton);
+        Button pixButton = (Button)findViewById(R.id.pixButton);
         Button dataButton = (Button)findViewById(R.id.dataButton);
 
         gpsButton.setOnClickListener(mGotoGps);
+        pixButton.setOnClickListener(mGotoCam);
         barcodeButton.setOnClickListener(mScanBarcode);
         dataButton.setOnClickListener(mShowData);
 
@@ -41,7 +43,15 @@ public class BodyTrackHome extends Activity{
 	    	Intent intent = new Intent(getApplicationContext(), GpsSvcControl.class);
 	    	startActivity(intent);
 	    }
-    };    
+    };
+    
+    /*Handles the pix button: goes to the camera control activity*/
+    private Button.OnClickListener mGotoCam = new Button.OnClickListener(){
+	    public void onClick(View v) {
+	    	Intent intent = new Intent(getApplicationContext(), CameraActivity.class);
+	    	startActivity(intent);
+	    }
+    }; 
     
     /*Handles the barcode button: Requests the ZXing app scan a barcode*/
     private Button.OnClickListener mScanBarcode = new Button.OnClickListener(){

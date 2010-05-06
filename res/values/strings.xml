@@ -12,5 +12,6 @@
     <string name="gpsTitle">Stop GPS Tracking</string>        
     <string name="gpsSvcStartButton">Start GPS Tracking</string>    
     <string name="gpsSvcStopButton">Stop GPS Tracking</string>    
+    <string name="showData">Show data</string>    
   	
 </resources>

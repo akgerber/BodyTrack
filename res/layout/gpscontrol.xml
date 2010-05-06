@@ -4,7 +4,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 	<TextView
-		android:id="@+id/gpsTtle"
+		android:id="@+id/gpsTitle"
 	    android:layout_width="fill_parent" 
 	    android:layout_height="wrap_content" 
 	    android:text="@string/gpsTitle" />
@@ -18,4 +18,13 @@
 	    android:layout_width="fill_parent" 
 	    android:layout_height="wrap_content" 
 	    android:text="@string/gpsSvcStopButton" />
+   	<Button  
+		android:id="@+id/gpsShowButton"
+	    android:layout_width="fill_parent" 
+	    android:layout_height="wrap_content" 
+	    android:text="@string/showData" />
+	<TextView
+		android:id="@+id/Outbox"
+    	android:layout_width="fill_parent" 
+	    android:layout_height="wrap_content" />
 </LinearLayout>

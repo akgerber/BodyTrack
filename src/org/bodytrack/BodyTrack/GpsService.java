@@ -26,6 +26,8 @@ public class GpsService extends Service{
 	
 	private FileOutputStream gpsFile;
 	protected OutputStreamWriter gpsWriter;
+	protected BTDbAdapter dbAdapter;
+	
 	
 	@Override
 	public void onCreate() {
@@ -35,6 +37,8 @@ public class GpsService extends Service{
 		/*Get an instance of the location manager*/
 		locMan = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
 		locListen = new myLocListen();
+		
+		dbAdapter = new BTDbAdapter(this).open();
 		
 		try{
 			gpsFile = openFileOutput("gps.csv", MODE_APPEND);
@@ -87,13 +91,19 @@ public class GpsService extends Service{
 	 */
 	private class myLocListen implements LocationListener{
 
-		public void onLocationChanged(Location arg0) {
-			Log.v(GpsService.TAG, "Location changed. Location: " + arg0);
-			try {
-				GpsService.this.gpsWriter.write(arg0.toString());
-			} catch (IOException e) {
-				Log.e(GpsService.TAG, "GPS failed to write changed location");
+		public void onLocationChanged(Location loc) {
+			Log.v(TAG, "Location changed. Location: " + loc);
+			
+			Long result = dbAdapter.writeLocation(loc);
+			if (result == -1) {
+				Log.e(TAG, "Failed to write location to DB!");
 			}
+				
+			/*try {
+				GpsService.this.gpsWriter.write(loc.toString());
+			} catch (IOException e) {
+				Log.e(TAG, "GPS failed to write changed location");
+			}*/
 		}
 
 		public void onProviderDisabled(String arg0) {
