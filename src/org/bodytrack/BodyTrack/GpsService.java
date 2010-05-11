@@ -1,9 +1,5 @@
 package org.bodytrack.BodyTrack;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -24,11 +20,8 @@ public class GpsService extends Service{
 	private LocationManager locMan;
 	private boolean isLogging;
 	
-	private FileOutputStream gpsFile;
-	protected OutputStreamWriter gpsWriter;
 	protected BTDbAdapter dbAdapter;
-	
-	
+		
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -40,12 +33,12 @@ public class GpsService extends Service{
 		
 		dbAdapter = new BTDbAdapter(this).open();
 		
-		try{
+		/*try{
 			gpsFile = openFileOutput("gps.csv", MODE_APPEND);
 			gpsWriter = new OutputStreamWriter(gpsFile);
 		} catch(Exception e) {
 	    	Log.e(TAG, "Failed to open file; exception: " + e.toString());	
-		}
+		}*/
 
 	}
 	

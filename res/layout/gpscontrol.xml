@@ -23,7 +23,12 @@
 	    android:layout_width="fill_parent" 
 	    android:layout_height="wrap_content" 
 	    android:text="@string/showData" />
-	<TextView
+   	<Button  
+		android:id="@+id/gpsDumpButton"
+	    android:layout_width="fill_parent" 
+	    android:layout_height="wrap_content" 
+	    android:text="@string/dumpData" />
+    <TextView
 		android:id="@+id/Outbox"
     	android:layout_width="fill_parent" 
 	    android:layout_height="wrap_content" />

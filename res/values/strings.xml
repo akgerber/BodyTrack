@@ -4,7 +4,8 @@
 	<!-- Main activity values -->
     <string name="title">BODYTRACK!</string>
     <string name="gpsButton">GPS Tracking</string>    
-    <string name="barcodeButton">Scan food barcode</string>    
+    <string name="barcodeButton">Scan food barcode</string>  
+    <string name="barcodeFail">ZXing barcode scanner not installed. Please install!</string>    
     <string name="pixButton">Take meal picture</string>    
     <string name="dataButton">SHOW ME THE DATA</string>
     
@@ -12,6 +13,11 @@
     <string name="gpsTitle">Stop GPS Tracking</string>        
     <string name="gpsSvcStartButton">Start GPS Tracking</string>    
     <string name="gpsSvcStopButton">Stop GPS Tracking</string>    
-    <string name="showData">Show data</string>    
+    <string name="showData">Show data</string>
+    <string name="dumpData">Send data to web</string>    
+   
+    
+    <!-- Camera values -->
+  	<string name="tookPic">Picture stored</string>    
   	
 </resources>
