@@ -1,9 +1,17 @@
 package org.bodytrack.BodyTrack;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
+
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONArray;
 
 import android.app.Activity;
 import android.content.ComponentName;
@@ -16,6 +24,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class GpsSvcControl extends Activity{
 	private static final String TAG = "GpsSvcControl";
@@ -102,45 +111,48 @@ public class GpsSvcControl extends Activity{
     private Button.OnClickListener dumpData = new Button.OnClickListener(){
 	    public void onClick(View v) {
 	    	Cursor geodata = dbAdapter.fetchAllLocations();
-	    	List<String []> data = new ArrayList<String []>();
+	    	JSONArray data = new JSONArray();
 	    	
 	    	geodata.moveToFirst();
 	    	String [] namesArr = geodata.getColumnNames();
-	    	data.add(namesArr);
-	    	
+	    	List <String> columns = Arrays.asList(namesArr);
+	    	JSONArray jsonColumns = new JSONArray(columns);
+	    	data.put(jsonColumns);
+
 	    	while (geodata.isAfterLast() == false) {
 	    		ArrayList<String> fields= new ArrayList<String>();
 		    	for (String name : namesArr) {
 		    		fields.add(geodata.getString(geodata.getColumnIndex(name)));
-		    		geodata.moveToNext();
 		    	}
-		    	data.add((String [])fields.toArray());
+		    	JSONArray jsonFields = new JSONArray(fields);
+		    	data.put(jsonFields);
+	    		geodata.moveToNext();
+	    	}
+
+	    	
+
+
+	    	HttpClient mHttpClient = new DefaultHttpClient();
+	    	HttpPost postToServer = new HttpPost("http://slab.wv.cc.cmu.edu/cgi-bin/test_api.py");
+	    	try {
+	    		List<NameValuePair> postRequest = new ArrayList<NameValuePair>();
+		    	postRequest.add(new BasicNameValuePair("device_class","droid-phone"));//TODO: get name
+		    	postRequest.add(new BasicNameValuePair("source_class", "location"));
+		    	postRequest.add(new BasicNameValuePair("device_id", "00:00:00:00:00"));//TODO: make real
+		    	postRequest.add(new BasicNameValuePair("source_id", "00:00:00:00:00/location"));
+		    	postRequest.add(new BasicNameValuePair("sensor_nickname", "phone location"));
+		    	postRequest.add(new BasicNameValuePair("timezone", "utc"));//TODO:: make real
+		    	postRequest.add(new BasicNameValuePair("data", data.toString()));
+		    	
+	    		postToServer.setEntity(new UrlEncodedFormEntity(postRequest));
+	    		HttpResponse response = mHttpClient.execute(postToServer);
+				Toast.makeText(GpsSvcControl.this, response.toString(),
+						Toast.LENGTH_SHORT).show();	  
+	    	} catch (Exception e) {
+	    		e.printStackTrace();
 	    	}
 	    	
-	    	/*
-	    	 *   5 fields = {}
-  6 fields['device_class']='Google Nexus 1'
-  7 fields['source_class']='location'
-  8 fields['device_id']='00:26:4a:0e:ae:0a'
-  9 fields['source_id']='00:26:4a:0e:ae:0a/location'
- 10 fields['sensor_nickname']='phone location'
- 11 fields['timezone']='UTC'
- 12 fields['time_range']={"begin" : "2010-03-18T21:52:27.50", "end" : "2010-03-19T23:00:02.25"}
- 13 fields['data']=[
- 14     ["time", "latitude", "longitude", "altitude", "uncertainty in meters"],
- 15     ["2010-03-18T21:52:20.00", 40.4459, -79.9763, 10],
- 16     ["2010-03-18T21:52:30.00", 40.44591, -79.976305, 10],
- 17     ["2010-03-18T21:52:40.00", 40.44592, -79.97631, 10]
- 18     ]
-
-	    	 */
 	    	
-	    	Map<String, Object> request = new HashMap<String, Object>();
-	    	/*map.put("device_class","droid-phone");//TODO: get name
-	    	map.put("source_class", "location");
-	    	map.put("device_id", "00:00:00:00:00");//TODO: make real
-	    	map.put("source_id", device_id + '/' + source_class);
-	    	*/
 	    	
 	    	geodata.close();
 	    }

@@ -7,7 +7,6 @@
     <string name="barcodeButton">Scan food barcode</string>  
     <string name="barcodeFail">ZXing barcode scanner not installed. Please install!</string>    
     <string name="pixButton">Take meal picture</string>    
-    <string name="dataButton">SHOW ME THE DATA</string>
     
     <!-- GPS Service control activity values -->
     <string name="gpsTitle">Stop GPS Tracking</string>        

@@ -1,8 +1,5 @@
 package org.bodytrack.BodyTrack;
 
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -32,12 +29,10 @@ public class BodyTrackHome extends Activity{
         Button gpsButton = (Button)findViewById(R.id.gpsButton);
         Button barcodeButton = (Button)findViewById(R.id.barcodeButton);
         Button pixButton = (Button)findViewById(R.id.pixButton);
-        Button dataButton = (Button)findViewById(R.id.dataButton);
 
         gpsButton.setOnClickListener(mGotoGps);
         pixButton.setOnClickListener(mGotoCam);
         barcodeButton.setOnClickListener(mScanBarcode);
-        dataButton.setOnClickListener(mShowData);
 
     }
 
@@ -74,27 +69,6 @@ public class BodyTrackHome extends Activity{
 	    }
     };
     
-    /*Handles the show data button: */
-    private Button.OnClickListener mShowData = new Button.OnClickListener(){
-	    public void onClick(View v) {
-	    	showData();
-	    }
-    };
-    
-    /*Shows logged barcodes*/
-    private void showData(){
-    	try {
-    		FileInputStream bcFile = this.openFileInput("barcodes.csv");
-    		InputStreamReader reader = new InputStreamReader(bcFile);
-    		char[] buf = new char[256];
-    		StringBuilder data = new StringBuilder();
-    		while (reader.read(buf) != -1)
-    		{
-    			data.append(buf.toString() + "\n");
-    		}
-    		Utilities.showDialog(data.toString(), this);
-    	} catch(Exception e) {Utilities.showDialog(e.toString(), this);}
-    }
     
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -129,7 +103,6 @@ public class BodyTrackHome extends Activity{
     		}*/
 		} else {
 	    	Log.v(TAG, "Unexpected activity result");
-			Utilities.showDialog("aww snap", this);
 		}
     }
     

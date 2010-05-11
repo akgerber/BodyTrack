@@ -24,9 +24,5 @@
 	    android:layout_width="fill_parent" 
 	    android:layout_height="wrap_content" 
 	    android:text="@string/pixButton" />
-	<Button  
-		android:id="@+id/dataButton"
-	    android:layout_width="fill_parent" 
-	    android:layout_height="wrap_content" 
-	    android:text="@string/dataButton" />
+
 </LinearLayout>
