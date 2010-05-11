@@ -37,7 +37,7 @@ public class GpsSvcControl extends Activity{
 	private IGPSSvcRPC gpsBinder;
 	protected BTDbAdapter dbAdapter;
 	
-	private String dumpAddress = "http://128.237.237.188/cgi-bin/test_api.py";
+	private String dumpAddress = "http://slab.wv.cc.cmu.edu/cgi-bin/test_api.py";
 
 	
     /** Called when the activity is first created. */
@@ -133,7 +133,7 @@ public class GpsSvcControl extends Activity{
 
 
 	    	HttpClient mHttpClient = new DefaultHttpClient();
-	    	HttpPost postToServer = new HttpPost("http://slab.wv.cc.cmu.edu/cgi-bin/test_api.py");
+	    	HttpPost postToServer = new HttpPost(dumpAddress);
 	    	try {
 	    		List<NameValuePair> postRequest = new ArrayList<NameValuePair>();
 		    	postRequest.add(new BasicNameValuePair("device_class","droid-phone"));//TODO: get name
