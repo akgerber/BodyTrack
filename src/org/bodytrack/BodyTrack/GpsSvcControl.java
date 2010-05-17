@@ -69,7 +69,7 @@ public class GpsSvcControl extends Activity{
         Log.v(TAG, "Telling GPS service to start. Success? " + bindSuccess);
         gpsSvcStartButton.setEnabled(false);
         gpsSvcStopButton.setEnabled(true);
-
+ 
 
     }
     
