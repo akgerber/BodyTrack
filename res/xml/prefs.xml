@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen 
+	xmlns:android="http://schemas.android.com/apk/res/android">
+        <EditTextPreference
+                android:key="upload_address"
+                android:title="@string/title_upload_address"
+                android:summary="@string/summary_upload_address"
+                android:dialogTitle="@string/dialog_title_upload_address" 
+                android:defaultValue="@string/default_upload_url"/>
+                
+</PreferenceScreen>

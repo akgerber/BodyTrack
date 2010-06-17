@@ -20,6 +20,8 @@
         </activity>
 		<activity android:name=".GpsSvcControl">
 		</activity>
+		<activity android:name=".BTPrefs">
+		</activity>
 		<activity android:name=".CameraActivity"
 		android:screenOrientation="landscape">
 		</activity>

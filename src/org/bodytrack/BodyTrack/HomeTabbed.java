@@ -4,9 +4,14 @@ import android.app.TabActivity;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.TabHost;
 
 public class HomeTabbed extends TabActivity {
+
+	private Menu mMenu;
 
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
@@ -34,4 +39,22 @@ public class HomeTabbed extends TabActivity {
 	    //tabHost.setCurrentTab(2);
 	}	
 	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		mMenu = menu;
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.menu, menu);
+		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.prefs:
+	    	Intent intent = new Intent(getApplicationContext(), BTPrefs.class);
+	    	startActivity(intent);
+			return true;
+		}
+		return false;
+	}
 }

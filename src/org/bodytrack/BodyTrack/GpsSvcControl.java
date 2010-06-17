@@ -17,6 +17,7 @@ import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -37,8 +38,9 @@ public class GpsSvcControl extends Activity{
 	private IGPSSvcRPC gpsBinder;
 	protected BTDbAdapter dbAdapter;
 	
-	private String dumpAddress = "http://slab.wv.cc.cmu.edu/cgi-bin/test_api.py";
-
+	protected SharedPreferences prefs;
+	protected String dumpAddress;
+	
 	
     /** Called when the activity is first created. */
     @Override
@@ -59,7 +61,13 @@ public class GpsSvcControl extends Activity{
         Outbox = (TextView)findViewById(R.id.Outbox);
         
 		dbAdapter = new BTDbAdapter(this).open();
-
+		
+		//Load preferences
+		prefs = getSharedPreferences("prefs", 0);
+		dumpAddress = prefs.getString("upload_address", "FAIL");
+		Log.v(TAG, "loaded submission address " + dumpAddress + 
+				" from preferences");
+		
     }
     
     private void startGps() {

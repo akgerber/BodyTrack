@@ -19,4 +19,10 @@
     <!-- Camera values -->
   	<string name="tookPic">Picture stored</string>    
   	
+  	<!-- Settings values -->
+  	<string name="prefs">Preferences</string>
+  	<string name="title_upload_address">Upload URL</string>
+  	<string name="summary_upload_address">The URL to dump data to.</string>
+  	<string name="dialog_title_upload_address">Upload URL</string>
+  	<string name="default_upload_url">http://www.example.com/fake.py</string>
 </resources>
