@@ -21,6 +21,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -63,11 +64,21 @@ public class GpsSvcControl extends Activity{
 		dbAdapter = new BTDbAdapter(this).open();
 		
 		//Load preferences
-		prefs = getSharedPreferences("prefs", 0);
+		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		dumpAddress = prefs.getString("upload_address", "FAIL");
 		Log.v(TAG, "loaded submission address " + dumpAddress + 
 				" from preferences");
 		
+    }
+    
+    public void onResume() {
+		//Load preferences
+		prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		dumpAddress = prefs.getString("upload_address", "FAIL");
+		Log.v(TAG, "loaded submission address " + dumpAddress + 
+				" from preferences");
+		
+		super.onResume();
     }
     
     private void startGps() {
