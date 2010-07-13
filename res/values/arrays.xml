@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<!-- GPS Preferences -->
+	<string-array name="gps_provider">
+		<item>GPS</item>
+		<item>cell</item>
+		<!-- <item>both</item> -->
+	</string-array>
+</resources>

@@ -50,6 +50,7 @@ public class GpsSvcControl extends Activity{
         
         Log.v(TAG, "Starting GpsSvcControl activity");
         setContentView(R.layout.gpscontrol);
+        //Set up buttons
         gpsSvcStartButton = (Button)findViewById(R.id.gpsSvcStartButton);
         gpsSvcStopButton = (Button)findViewById(R.id.gpsSvcStopButton);
         gpsSvcStartButton.setOnClickListener(mStartSvc);
@@ -61,6 +62,7 @@ public class GpsSvcControl extends Activity{
         gpsDumpButton.setOnClickListener(dumpData);
         Outbox = (TextView)findViewById(R.id.Outbox);
         
+        //connect to database
 		dbAdapter = new BTDbAdapter(this).open();
 		
 		//Load preferences
@@ -74,6 +76,7 @@ public class GpsSvcControl extends Activity{
     public void onResume() {
 		//Load preferences
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		//reset upload address if changed
 		dumpAddress = prefs.getString("upload_address", "FAIL");
 		Log.v(TAG, "loaded submission address " + dumpAddress + 
 				" from preferences");
@@ -112,6 +115,8 @@ public class GpsSvcControl extends Activity{
 	    }
     };
  
+    //TODO: replace with a listview in bottom half of view (maybe move svc
+    //buttons to menu?)
     private Button.OnClickListener showData = new Button.OnClickListener(){
 	    public void onClick(View v) {
 	    	Outbox.setText("");
@@ -127,11 +132,16 @@ public class GpsSvcControl extends Activity{
 	    }
     };
     
+    //TODO: moved all uploading to DB adapter? sure shouldn't be here
     private Button.OnClickListener dumpData = new Button.OnClickListener(){
 	    public void onClick(View v) {
+	    	//grab location data cursor from database
 	    	Cursor geodata = dbAdapter.fetchAllLocations();
+	    	
+	    	//create a json array to put it in
 	    	JSONArray data = new JSONArray();
 	    	
+	    	//iterate through location data in db
 	    	geodata.moveToFirst();
 	    	String [] namesArr = geodata.getColumnNames();
 	    	List <String> columns = Arrays.asList(namesArr);
@@ -150,7 +160,7 @@ public class GpsSvcControl extends Activity{
 
 	    	
 
-
+	    	//make an http request
 	    	HttpClient mHttpClient = new DefaultHttpClient();
 	    	HttpPost postToServer = new HttpPost(dumpAddress);
 	    	try {
