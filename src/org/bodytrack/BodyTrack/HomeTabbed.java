@@ -25,13 +25,18 @@ public class HomeTabbed extends TabActivity {
 	    // Create an Intent to launch an Activity for the tab (to be reused)
 	    intent = new Intent().setClass(this, GpsSvcControl.class);
 	    // Initialize a TabSpec for each tab and add it to the TabHost
-	    spec = tabHost.newTabSpec("artists").setIndicator("GPS")
+	    spec = tabHost.newTabSpec("gps").setIndicator("GPS")
 	                  .setContent(intent);
 	    tabHost.addTab(spec);
 
 	    // Do the same for the other tabs
-	    intent = new Intent().setClass(this, CameraActivity.class);
+	    intent = new Intent().setClass(this, CameraReview.class);
 	    spec = tabHost.newTabSpec("camera").setIndicator("Camera")
+	    	.setContent(intent);
+	    tabHost.addTab(spec);
+	    
+	    intent = new Intent().setClass(this, BarcodeReview.class);
+	    spec = tabHost.newTabSpec("barcode").setIndicator("Barcodes")
 	    	.setContent(intent);
 	    tabHost.addTab(spec);
 

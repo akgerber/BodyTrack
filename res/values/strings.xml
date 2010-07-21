@@ -17,6 +17,12 @@
    
     <!-- Camera values -->
   	<string name="tookPic">Picture stored</string>
+  	<string name="takePic">Take a new meal photo</string>
+  	<string name="photoInfo">This will be where photos/notes can be reviewed</string>
+  	
+  	<!--  Barcode values -->
+  	<string name="getBarcode">Scan a new barcode</string>
+  	<string name="barcodeInfo">You will be able to review barcodes here</string>
   	
   	<!-- Menu values --> 
   	<string name="prefs">Preferences</string>

@@ -25,6 +25,10 @@
 		<activity android:name=".CameraActivity"
 		android:screenOrientation="landscape">
 		</activity>
+		<activity android:name=".CameraReview">
+		</activity>
+		<activity android:name=".BarcodeReview">
+		</activity>
 		<service android:name=".GpsService">
 		</service>
 	</application>
