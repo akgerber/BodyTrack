@@ -8,6 +8,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.location.Location;
 
+/*
+ * This class wraps database operations.
+ */
+
 public class BTDbAdapter {
 	private static String DB_NAME = "BodytrackDB";
 	private static int DB_VERSION = 1;

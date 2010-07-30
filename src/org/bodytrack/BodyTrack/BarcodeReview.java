@@ -9,6 +9,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+
+/*
+ * This class defines an activity which allows the user to review
+ *  previously captured  barcodes and has a button to allow the
+ *   capture of new ones.
+ */
 public class BarcodeReview extends Activity {
 	
 	Button getBarcode;

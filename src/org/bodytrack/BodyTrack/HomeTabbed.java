@@ -9,6 +9,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TabHost;
 
+/* This class defines a tabbed UI that allows the user to see the app's main
+ * features. It is what is shown when the app is launched.
+ */
 public class HomeTabbed extends TabActivity {
 
 	private Menu mMenu;
@@ -41,7 +44,6 @@ public class HomeTabbed extends TabActivity {
 	    tabHost.addTab(spec);
 
 
-	    //tabHost.setCurrentTab(2);
 	}	
 	
 	@Override

@@ -28,6 +28,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+/*This class defines an activity that provides the user control over the GPS
+ * service. 
+ */
+
 public class GpsSvcControl extends Activity{
 	private static final String TAG = "GpsSvcControl";
 	private Button gpsSvcStartButton;

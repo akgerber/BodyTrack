@@ -4,6 +4,11 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 
+/*This class creates an activity to modify preferences.
+ * Preferences set are defined in res/xml/prefs.xml
+ * 
+ */
+
 public class BTPrefs extends PreferenceActivity {
 	
 	@Override

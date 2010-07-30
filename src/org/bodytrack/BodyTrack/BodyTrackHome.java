@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+/*This class was the main activity. It is unused and has been 
+ * superseded by HomeTabbed.java*/
 public class BodyTrackHome extends Activity{
 	private static final String TAG = "BodyTrackHome";
 	

@@ -10,6 +10,12 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
+
+/* 
+ * This class defines a service which runs in the background on
+ * the phone to capture location data. It is controlled by the 
+ * activity defined by GpsSvccontrol.java
+ */
 public class GpsService extends Service{
 	/*constants*/
 	private static final String TAG = "GpsService";

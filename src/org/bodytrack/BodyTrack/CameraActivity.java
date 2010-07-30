@@ -11,6 +11,10 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+/*
+ * This class provides a UI to take photos (tap to focus/take a photo)
+ * and saves them to the database.
+ */
 public class CameraActivity extends Activity implements SurfaceHolder.Callback{
 
 	SurfaceView mSurfaceView;
