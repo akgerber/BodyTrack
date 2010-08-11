@@ -18,7 +18,8 @@ import android.util.Log;
  */
 public class GpsService extends Service{
 	/*constants*/
-	private static final String TAG = "GpsService";
+	public static final String TAG = "GpsService";
+	
 	private final long minTime = 1;
 	private final long minDistance = 10;
 	

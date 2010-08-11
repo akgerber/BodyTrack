@@ -12,6 +12,7 @@ import android.widget.Button;
  * ones.
  */
 public class CameraReview extends Activity {
+	public static final String TAG = "cameraReview";
 	
 	Button takePic;
 	

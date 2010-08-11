@@ -1,13 +1,15 @@
 package org.bodytrack.BodyTrack;
 
-import android.app.Activity;
+import android.app.ListActivity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.Toast;
+import android.widget.ListAdapter;
+import android.widget.SimpleCursorAdapter;
 
 
 /*
@@ -15,10 +17,12 @@ import android.widget.Toast;
  *  previously captured  barcodes and has a button to allow the
  *   capture of new ones.
  */
-public class BarcodeReview extends Activity {
+public class BarcodeReview extends ListActivity {
+	public static final String TAG = "BarcodeReview";
 	
 	Button getBarcode;
 	BTDbAdapter dbAdapter;
+	Cursor bccursor;
 	
 	
 	public void onCreate(Bundle savedInstanceState) {
@@ -31,6 +35,17 @@ public class BarcodeReview extends Activity {
 		
         //connect to database
 		dbAdapter = new BTDbAdapter(this).open();
+		bccursor = dbAdapter.fetchAllBarcodes();
+		
+		//set list contents
+		ListAdapter bcAdapter = new SimpleCursorAdapter(
+				this, //context
+				android.R.layout.simple_list_item_1,
+				bccursor,
+				new String[] {BTDbAdapter.BC_KEY_BARCODE},
+				new int[] {android.R.id.text1}
+				);
+		setListAdapter(bcAdapter);
 	}
 	
 	

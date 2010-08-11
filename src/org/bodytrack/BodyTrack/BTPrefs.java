@@ -10,6 +10,7 @@ import android.preference.PreferenceActivity;
  */
 
 public class BTPrefs extends PreferenceActivity {
+	public static final String TAG = "BTPrefs";
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

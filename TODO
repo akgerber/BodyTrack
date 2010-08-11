@@ -1,0 +1,6 @@
+put barcodes, photos, locations into objects
+test server-side
+add uploading for all
+clean up json
+listview reviews
+set up service properly as a foreground service

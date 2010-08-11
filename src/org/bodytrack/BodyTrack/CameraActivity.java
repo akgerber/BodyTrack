@@ -16,7 +16,8 @@ import android.widget.Toast;
  * and saves them to the database.
  */
 public class CameraActivity extends Activity implements SurfaceHolder.Callback{
-
+	public static final String TAG = "cameraActivity";
+	
 	SurfaceView mSurfaceView;
 	SurfaceHolder mSurfaceHolder;
 	Camera mCamera;

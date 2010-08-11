@@ -33,7 +33,12 @@ import android.widget.Toast;
  */
 
 public class GpsSvcControl extends Activity{
-	private static final String TAG = "GpsSvcControl";
+	public static final String TAG = "GpsSvcControl";
+	
+	private static final String RUNNINGKEY = "SvcRunning";
+	
+	private boolean svcRunning;
+	
 	private Button gpsSvcStartButton;
 	private Button gpsSvcStopButton;
 	private Button gpsShowButton;
@@ -49,22 +54,35 @@ public class GpsSvcControl extends Activity{
 	
     /** Called when the activity is first created. */
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
         Log.v(TAG, "Starting GpsSvcControl activity");
         setContentView(R.layout.gpscontrol);
+        
+        //recover whether service is running (false if not present)
+        if (savedInstanceState != null) {
+        	svcRunning = savedInstanceState.getBoolean(RUNNINGKEY, false);
+        }
+        svcRunning = false;
+        
         //Set up buttons
         gpsSvcStartButton = (Button)findViewById(R.id.gpsSvcStartButton);
         gpsSvcStopButton = (Button)findViewById(R.id.gpsSvcStopButton);
         gpsSvcStartButton.setOnClickListener(mStartSvc);
         gpsSvcStopButton.setOnClickListener(mStopSvc);
-        gpsSvcStopButton.setEnabled(false);
         gpsShowButton = (Button)findViewById(R.id.gpsShowButton);
         gpsShowButton.setOnClickListener(showData);
         gpsDumpButton = (Button)findViewById(R.id.gpsDumpButton);
         gpsDumpButton.setOnClickListener(dumpData);
         Outbox = (TextView)findViewById(R.id.Outbox);
+        //set service control buttons to appropriate state
+        if (svcRunning) {
+        	gpsSvcStartButton.setEnabled(false);
+        } else {
+        	gpsSvcStopButton.setEnabled(false);
+        }
+
         
         //connect to database
 		dbAdapter = new BTDbAdapter(this).open();
@@ -77,7 +95,17 @@ public class GpsSvcControl extends Activity{
 		
     }
     
-    public void onResume() {
+    
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+    	//record whether the service is running
+    	outState.putBoolean(RUNNINGKEY, svcRunning);
+    	
+    	super.onSaveInstanceState(outState);
+    }
+    
+    @Override
+    protected void onResume() {
 		//Load preferences
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		//reset upload address if changed

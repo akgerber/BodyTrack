@@ -13,6 +13,7 @@ import android.widget.TabHost;
  * features. It is what is shown when the app is launched.
  */
 public class HomeTabbed extends TabActivity {
+	public static final String TAG = "HomeTabbed";
 
 	private Menu mMenu;
 

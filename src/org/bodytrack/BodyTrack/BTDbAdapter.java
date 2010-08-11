@@ -13,6 +13,8 @@ import android.location.Location;
  */
 
 public class BTDbAdapter {
+	public static final String TAG = "BTDbAdapter";
+	
 	private static String DB_NAME = "BodytrackDB";
 	private static int DB_VERSION = 1;
 	
@@ -24,15 +26,15 @@ public class BTDbAdapter {
                 + "accuracy real, altitude real, bearing real, provider text,"
                 + "speed real);";
 	//fields of location table
-	private static final String LOCATION_TABLE = "location";
-	private static final String LOC_KEY_LATITUDE = "latitude";
-	private static final String LOC_KEY_LONGITUDE = "longitude";
-	private static final String LOC_KEY_TIME = "time";
-	private static final String LOC_KEY_ACCURACY = "accuracy";
-	private static final String LOC_KEY_ALTITUDE = "altitude";
-	private static final String LOC_KEY_BEARING = "bearing";
-	private static final String LOC_KEY_PROVIDER = "provider";
-	private static final String LOC_KEY_SPEED = "speed";
+	public static final String LOCATION_TABLE = "location";
+	public static final String LOC_KEY_LATITUDE = "latitude";
+	public static final String LOC_KEY_LONGITUDE = "longitude";
+	public static final String LOC_KEY_TIME = "time";
+	public static final String LOC_KEY_ACCURACY = "accuracy";
+	public static final String LOC_KEY_ALTITUDE = "altitude";
+	public static final String LOC_KEY_BEARING = "bearing";
+	public static final String LOC_KEY_PROVIDER = "provider";
+	public static final String LOC_KEY_SPEED = "speed";
 
 
     //Barcode table creation SQL
@@ -40,24 +42,23 @@ public class BTDbAdapter {
         "create table barcode (_id integer primary key autoincrement, "
                 + "time integer not null, barcode integer not null);";
     //fields of barcode table
-	private static final String BARCODE_TABLE = "barcode";
-	private static final String	BC_KEY_TIME = "time";
-	private static final String BC_KEY_BARCODE = "barcode";
+	public static final String BARCODE_TABLE = "barcode";
+	public static final String	BC_KEY_TIME = "time";
+	public static final String BC_KEY_BARCODE = "barcode";
 	
     //Photo table creation SQL
     private static final String PIX_TABLE_CREATE =
         "create table pix (_id integer primary key autoincrement, "
                 + "time integer not null, pic blob not null);";
     //fields of photo table
-	private static final String PIX_TABLE = "pix";
-	private static final String	PIX_KEY_TIME = "time";
-	private static final String PIX_KEY_PIC = "pic";
+	public static final String PIX_TABLE = "pix";
+	public static final String	PIX_KEY_TIME = "time";
+	public static final String PIX_KEY_PIC = "pic";
 
     
     private DatabaseHelper mDbHelper;
     private Context mCtx;
     private SQLiteDatabase mDb;
-	
 	
 	private static class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -114,6 +115,11 @@ public class BTDbAdapter {
         		LOC_KEY_LONGITUDE, LOC_KEY_TIME, LOC_KEY_ACCURACY, LOC_KEY_ALTITUDE,
         		LOC_KEY_BEARING, LOC_KEY_PROVIDER, LOC_KEY_SPEED},
                 null, null, null, null, LOC_KEY_TIME);
+    }
+    
+    public Cursor fetchAllBarcodes() {
+        return mDb.query(BARCODE_TABLE, new String[] {BC_KEY_BARCODE, BC_KEY_TIME},
+                null, null, null, null, BC_KEY_TIME);
     }
     
 	public long writeBarcode(long barcode)
