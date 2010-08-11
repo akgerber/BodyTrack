@@ -26,7 +26,6 @@ public class CameraReview extends Activity {
 	}
 	
 	private Button.OnClickListener mTakePic = new Button.OnClickListener(){
-		@Override
 		public void onClick(View v) {
 			Intent intent = new Intent(getApplicationContext(), CameraActivity.class);
 			startActivity(intent);

@@ -220,7 +220,6 @@ public class GpsSvcControl extends Activity{
     };   
     
     private ServiceConnection sc = new ServiceConnection(){
-		@Override
 		public void onServiceConnected(ComponentName svc, IBinder binder) {
 			Log.v(TAG, "Service connected");
 			gpsBinder = IGPSSvcRPC.Stub.asInterface(binder);
@@ -231,7 +230,6 @@ public class GpsSvcControl extends Activity{
 	        }
 		}
 
-		@Override
 		public void onServiceDisconnected(ComponentName name) {
 			Log.v(TAG, "Service disconnected");
 		}

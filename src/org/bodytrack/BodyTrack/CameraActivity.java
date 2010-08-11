@@ -49,14 +49,12 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback{
     }
 
 	private View.OnClickListener takePicture = new View.OnClickListener(){
-		@Override
 		public void onClick(View v) {
 			//have mPictureCallback receive the JPEG
 			mCamera.takePicture(null, null, mPictureCallback);
 		}
 	};
 	
-	@Override
 	public void surfaceCreated(SurfaceHolder holder) {
 		mCamera = Camera.open();
 		try {
@@ -67,13 +65,11 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback{
 		mCamera.startPreview();
 	}	
 	
-	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
 			int height) {
 	}
 
 
-	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		mCamera.stopPreview();
 		previewRunning = false;
@@ -83,7 +79,6 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback{
 	
 	Camera.PictureCallback mPictureCallback = new Camera.PictureCallback() {
 
-		@Override
 		public void onPictureTaken(byte[] data, Camera camera) {
 			
 			if (dbAdapter.writePicture(data) != 0) {
