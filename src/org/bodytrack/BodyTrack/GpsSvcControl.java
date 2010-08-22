@@ -15,6 +15,7 @@ import org.json.JSONArray;
 
 import android.app.Activity;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
@@ -117,9 +118,10 @@ public class GpsSvcControl extends Activity{
     }
     
     private void startGps() {
-    	Intent intent = new Intent(this, GpsService.class);
-    	this.startService(intent);
-    	Boolean bindSuccess = this.bindService(intent, sc, 0);
+    	Context ctx = getApplicationContext();
+    	Intent intent = new Intent(ctx, GpsService.class);
+    	ctx.startService(intent);
+    	Boolean bindSuccess = ctx.bindService(intent, sc, 0);
         Log.v(TAG, "Telling GPS service to start. Success? " + bindSuccess);
         gpsSvcStartButton.setEnabled(false);
         gpsSvcStopButton.setEnabled(true);
@@ -131,9 +133,10 @@ public class GpsSvcControl extends Activity{
         Log.v(TAG, "Telling GPS service to stop");
 
     	try {
+    		Context ctx = getApplicationContext();
         	Intent intent = new Intent(this, GpsService.class);
-    		this.unbindService(sc);
-    		this.stopService(intent);
+    		ctx.unbindService(sc);
+    		ctx.stopService(intent);
             gpsSvcStartButton.setEnabled(true);
             gpsSvcStopButton.setEnabled(false);
     	} catch (Exception e) {
@@ -220,6 +223,7 @@ public class GpsSvcControl extends Activity{
     };   
     
     private ServiceConnection sc = new ServiceConnection(){
+    	@Override
 		public void onServiceConnected(ComponentName svc, IBinder binder) {
 			Log.v(TAG, "Service connected");
 			gpsBinder = IGPSSvcRPC.Stub.asInterface(binder);
@@ -230,6 +234,7 @@ public class GpsSvcControl extends Activity{
 	        }
 		}
 
+    	@Override
 		public void onServiceDisconnected(ComponentName name) {
 			Log.v(TAG, "Service disconnected");
 		}

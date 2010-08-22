@@ -5,8 +5,8 @@ import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.SimpleCursorAdapter;
@@ -36,6 +36,8 @@ public class BarcodeReview extends ListActivity {
         //connect to database
 		dbAdapter = new BTDbAdapter(this).open();
 		bccursor = dbAdapter.fetchAllBarcodes();
+		
+		Log.v(TAG, "Got DB adapter");
 		
 		//set list contents
 		ListAdapter bcAdapter = new SimpleCursorAdapter(
