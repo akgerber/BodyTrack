@@ -2,6 +2,7 @@ package org.bodytrack.BodyTrack;
 
 import android.app.ListActivity;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -29,19 +30,21 @@ public class BarcodeReview extends ListActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.barcode_review);
 		
+		Context ctx = getApplicationContext();
+		
 		//Set up button to go to camera activity
 		getBarcode = (Button)findViewById(R.id.getBarcode);
 		getBarcode.setOnClickListener(mGetBarcode);
 		
         //connect to database
-		dbAdapter = new BTDbAdapter(this).open();
+		dbAdapter = new BTDbAdapter(ctx).open();
 		bccursor = dbAdapter.fetchAllBarcodes();
 		
 		Log.v(TAG, "Got DB adapter");
 		
 		//set list contents
 		ListAdapter bcAdapter = new SimpleCursorAdapter(
-				this, //context
+				ctx, //context
 				android.R.layout.simple_list_item_1,
 				bccursor,
 				new String[] {BTDbAdapter.BC_KEY_BARCODE},

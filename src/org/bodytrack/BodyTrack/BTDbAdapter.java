@@ -25,8 +25,9 @@ public class BTDbAdapter {
                 + "latitude real not null, longitude real not null, time integer not null,"
                 + "accuracy real, altitude real, bearing real, provider text,"
                 + "speed real);";
-	//fields of location table
+	//fields of location table    
 	public static final String LOCATION_TABLE = "location";
+	public static final String LOC_KEY_ID = "_id";
 	public static final String LOC_KEY_LATITUDE = "latitude";
 	public static final String LOC_KEY_LONGITUDE = "longitude";
 	public static final String LOC_KEY_TIME = "time";
@@ -43,7 +44,8 @@ public class BTDbAdapter {
                 + "time integer not null, barcode integer not null);";
     //fields of barcode table
 	public static final String BARCODE_TABLE = "barcode";
-	public static final String	BC_KEY_TIME = "time";
+	public static final String BC_KEY_ID = "_id";
+	public static final String BC_KEY_TIME = "time";
 	public static final String BC_KEY_BARCODE = "barcode";
 	
     //Photo table creation SQL
@@ -52,6 +54,7 @@ public class BTDbAdapter {
                 + "time integer not null, pic blob not null);";
     //fields of photo table
 	public static final String PIX_TABLE = "pix";
+	public static final String	PIX_KEY_ID = "_id";
 	public static final String	PIX_KEY_TIME = "time";
 	public static final String PIX_KEY_PIC = "pic";
 
@@ -118,7 +121,7 @@ public class BTDbAdapter {
     }
     
     public Cursor fetchAllBarcodes() {
-        return mDb.query(BARCODE_TABLE, new String[] {BC_KEY_BARCODE, BC_KEY_TIME},
+        return mDb.query(BARCODE_TABLE, new String[] {BC_KEY_ID, BC_KEY_BARCODE, BC_KEY_TIME},
                 null, null, null, null, BC_KEY_TIME);
     }
     
