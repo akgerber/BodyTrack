@@ -1,5 +1,10 @@
 package org.bodytrack.BodyTrack;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +16,7 @@ import android.os.IBinder;
 import android.util.Log;
 
 
-/* 
+/** 
  * This class defines a service which runs in the background on
  * the phone to capture location data. It is controlled by the 
  * activity defined by GpsSvccontrol.java
@@ -28,6 +33,15 @@ public class GpsService extends Service{
 	private boolean isLogging;
 	
 	protected BTDbAdapter dbAdapter;
+	
+
+	private NotificationManager mNM;
+	private Method mStartForeground;
+	private Method mStopForeground;
+	private Object[] mStartForegroundArgs = new Object[2];
+	private Object[] mStopForegroundArgs = new Object[1];
+	private static final int NOTIFICATION = 5;
+
 		
 	@Override
 	public void onCreate() {
@@ -46,11 +60,29 @@ public class GpsService extends Service{
 		} catch(Exception e) {
 	    	Log.e(TAG, "Failed to open file; exception: " + e.toString());	
 		}*/
+		
+	    mNM = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+	    try {
+	        mStartForeground = getClass().getMethod("startForeground",
+	                mStartForegroundSignature);
+	        mStopForeground = getClass().getMethod("stopForeground",
+	                mStopForegroundSignature);
+	    } catch (NoSuchMethodException e) {
+	        // Running on an older platform.
+	        mStartForeground = mStopForeground = null;
+	    }
 
+	    int icon = android.R.drawable.star_big_on;
+	    long when = System.currentTimeMillis();
+	    Notification backgroundSvcNotify = new Notification(icon, getString(R.string.svcRunning), when);
+	    startForegroundCompat(NOTIFICATION, backgroundSvcNotify);
 	}
 	
 	@Override
 	public void onDestroy() {
+	    // Make sure our notification is gone.
+	    stopForegroundCompat(NOTIFICATION);
+	    
 		super.onDestroy();
 	}
 
@@ -79,6 +111,65 @@ public class GpsService extends Service{
 		}
 		isLogging = false;
 	}
+	
+	private static final Class[] mStartForegroundSignature = new Class[] {
+	    int.class, Notification.class};
+	private static final Class[] mStopForegroundSignature = new Class[] {
+	    boolean.class};
+
+	/**
+	 * This is a wrapper around the new startForeground method, using the older
+	 * APIs if it is not available.
+	 */
+	void startForegroundCompat(int id, Notification notification) {
+	    // If we have the new startForeground API, then use it.
+	    if (mStartForeground != null) {
+	        mStartForegroundArgs[0] = Integer.valueOf(id);
+	        mStartForegroundArgs[1] = notification;
+	        try {
+	            mStartForeground.invoke(this, mStartForegroundArgs);
+	        } catch (InvocationTargetException e) {
+	            // Should not happen.
+	            Log.w("ApiDemos", "Unable to invoke startForeground", e);
+	        } catch (IllegalAccessException e) {
+	            // Should not happen.
+	            Log.w("ApiDemos", "Unable to invoke startForeground", e);
+	        }
+	        return;
+	    }
+
+	    // Fall back on the old API.
+	    setForeground(true);
+	    mNM.notify(id, notification);
+	}
+
+	/**
+	 * This is a wrapper around the new stopForeground method, using the older
+	 * APIs if it is not available.
+	 */
+	void stopForegroundCompat(int id) {
+	    // If we have the new stopForeground API, then use it.
+	    if (mStopForeground != null) {
+	        mStopForegroundArgs[0] = Boolean.TRUE;
+	        try {
+	            mStopForeground.invoke(this, mStopForegroundArgs);
+	        } catch (InvocationTargetException e) {
+	            // Should not happen.
+	            Log.w("ApiDemos", "Unable to invoke stopForeground", e);
+	        } catch (IllegalAccessException e) {
+	            // Should not happen.
+	            Log.w("ApiDemos", "Unable to invoke stopForeground", e);
+	        }
+	        return;
+	    }
+
+	    // Fall back on the old API.  Note to cancel BEFORE changing the
+	    // foreground state, since we could be killed at that point.
+	    mNM.cancel(id);
+	    setForeground(false);
+	}
+
+
 
 	/*
 	 * Private classes:

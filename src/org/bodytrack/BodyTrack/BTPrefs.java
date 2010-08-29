@@ -3,7 +3,8 @@ package org.bodytrack.BodyTrack;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 
-/*This class creates an activity to modify preferences.
+/**
+ * This class creates an activity to modify preferences.
  * Preferences set are defined in res/xml/prefs.xml
  * 
  */

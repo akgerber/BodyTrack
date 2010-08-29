@@ -7,7 +7,8 @@ import android.view.View;
 import android.widget.Button;
 
 
-/*This class defines an activity that allows the user to review
+/**
+ * This class defines an activity that allows the user to review
  * previously taken (meal) photos and haas a button to take new
  * ones.
  */

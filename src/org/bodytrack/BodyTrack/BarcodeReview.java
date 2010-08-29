@@ -9,11 +9,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ListAdapter;
 import android.widget.SimpleCursorAdapter;
+import android.widget.Toast;
 
 
-/*
+/**
  * This class defines an activity which allows the user to review
  *  previously captured  barcodes and has a button to allow the
  *   capture of new ones.
@@ -21,12 +21,13 @@ import android.widget.SimpleCursorAdapter;
 public class BarcodeReview extends ListActivity {
 	public static final String TAG = "BarcodeReview";
 	
-	Button getBarcode;
-	BTDbAdapter dbAdapter;
-	Cursor bccursor;
+	private Button getBarcode;
+	private BTDbAdapter dbAdapter;
+	private SimpleCursorAdapter bcAdapter;
+	private Cursor bccursor;
 	
-	
-	public void onCreate(Bundle savedInstanceState) {
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.barcode_review);
 		
@@ -43,7 +44,7 @@ public class BarcodeReview extends ListActivity {
 		Log.v(TAG, "Got DB adapter");
 		
 		//set list contents
-		ListAdapter bcAdapter = new SimpleCursorAdapter(
+		bcAdapter = new SimpleCursorAdapter(
 				ctx, //context
 				android.R.layout.simple_list_item_1,
 				bccursor,
@@ -53,8 +54,7 @@ public class BarcodeReview extends ListActivity {
 		setListAdapter(bcAdapter);
 	}
 	
-	
-    /*Handles the barcode button: Requests the ZXing app scan a barcode*/
+    /**Handles the barcode button: Requests the ZXing app scan a barcode*/
 	private Button.OnClickListener mGetBarcode = new Button.OnClickListener(){
 	    public void onClick(View v) {
 	    	Intent intent = new Intent("com.google.zxing.client.android.SCAN");
@@ -68,13 +68,19 @@ public class BarcodeReview extends ListActivity {
 	    }
     };
     
-    
+    /**Handles the barcode data (a long) returned by the ZXing app*/
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
 		if (resultCode == RESULT_OK) {
-			long code = Long.parseLong((intent.getStringExtra("SCAN_RESULT")));
-			
-			dbAdapter.writeBarcode(code);
+			try {
+				long code = Long.parseLong((intent.getStringExtra("SCAN_RESULT")));
+				dbAdapter.writeBarcode(code);
+				//TODO: catch the bug that makes the list not update until destroyed/rebuilt
+				bcAdapter.notifyDataSetChanged();
+			}
+			catch (NumberFormatException e) {
+				Toast.makeText(this, R.string.barcodeFail, Toast.LENGTH_LONG);
+			}
 
 		} else {
 		}

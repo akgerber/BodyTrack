@@ -1,6 +1,9 @@
 put barcodes, photos, locations into objects
-test server-side
+xtest server-side
 add uploading for all
 clean up json
-listview reviews
+x listview review
+fix listview refreshs
+insert uploading into separate thread rather than blocking UI
 set up service properly as a foreground service
+add graphics
