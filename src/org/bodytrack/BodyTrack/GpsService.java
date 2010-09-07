@@ -36,7 +36,7 @@ public class GpsService extends Service{
 	protected BTDbAdapter dbAdapter;
 	
 
-	private NotificationManager mNM;
+	private NotificationManager notMan;
 	private Method mStartForeground;
 	private Method mStopForeground;
 	private Object[] mStartForegroundArgs = new Object[2];
@@ -62,7 +62,7 @@ public class GpsService extends Service{
 	    	Log.e(TAG, "Failed to open file; exception: " + e.toString());	
 		}*/
 		
-	    mNM = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+	    notMan = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
 	    try {
 	        mStartForeground = getClass().getMethod("startForeground",
 	                mStartForegroundSignature);
@@ -106,7 +106,6 @@ public class GpsService extends Service{
 		return rpcBinder;
 	}
 	
-	/*TODO: check for races*/
 	private void startLogging() {
     	Log.v(TAG, "Starting GPS logging");
 
@@ -155,7 +154,7 @@ public class GpsService extends Service{
 
 	    // Fall back on the old API.
 	    setForeground(true);
-	    mNM.notify(id, notification);
+	    notMan.notify(id, notification);
 	}
 
 	/**

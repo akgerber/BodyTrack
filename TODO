@@ -5,5 +5,5 @@ clean up json
 x listview review
 fix listview refreshs
 insert uploading into separate thread rather than blocking UI
-set up service properly as a foreground service
-add graphics
+x set up service properly as a foreground service
+add graphics/deuglify icon

@@ -1,0 +1,11 @@
+The BodyTrack Android application
+
+This application is part of the BodyTrack project (bodytrack.org), which
+aims to provide the layperson a means to track variables that correspond to
+her health via various sensor apparati.
+
+This application tracks the data an Android phone's built-in sensors are
+well-suited to track:
+-barcodes of food products
+-photos of meals
+-locations

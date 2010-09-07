@@ -47,7 +47,6 @@ public class GpsSvcControl extends Activity{
 	private Button gpsDumpButton;
 	
 	private TextView Outbox;
-	private IGPSSvcRPC gpsBinder;
 	protected BTDbAdapter dbAdapter;
 	
 	protected SharedPreferences prefs;
@@ -224,6 +223,8 @@ public class GpsSvcControl extends Activity{
     };   
     
     private ServiceConnection sc = new ServiceConnection(){
+    	public IGPSSvcRPC gpsBinder;
+    	
     	@Override
 		public void onServiceConnected(ComponentName svc, IBinder binder) {
 			Log.v(TAG, "Service connected");
