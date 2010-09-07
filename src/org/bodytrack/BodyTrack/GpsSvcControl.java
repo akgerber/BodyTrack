@@ -229,6 +229,7 @@ public class GpsSvcControl extends Activity{
 			Log.v(TAG, "Service connected");
 			gpsBinder = IGPSSvcRPC.Stub.asInterface(binder);
 	        try {
+	        	gpsBinder.bringToForeground();
 	        	gpsBinder.startLogging();
 	        } catch(Exception e) {
 	        	Log.e(TAG, "Failed to start logging in GPS Service; exception: " + e);

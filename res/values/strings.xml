@@ -17,6 +17,7 @@
    
    <!--  GPS Service values -->
    <string name="svcRunning">BodyTrack GPS tracker running</string>
+   <string name="svcTitle">BodyTrack GPS Service</string>
    
     <!-- Camera values -->
   	<string name="tookPic">Picture stored</string>

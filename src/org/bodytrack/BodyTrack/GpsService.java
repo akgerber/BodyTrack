@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 
 import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -71,11 +72,25 @@ public class GpsService extends Service{
 	        // Running on an older platform.
 	        mStartForeground = mStopForeground = null;
 	    }
-
-	    int icon = android.R.drawable.star_big_on;
+	}
+	
+	private void bringToForeground() {
+		Context ctx = getApplicationContext();
+		
+		//instantiate the notification
 	    long when = System.currentTimeMillis();
-	    Notification backgroundSvcNotify = new Notification(icon, getString(R.string.svcRunning), when);
-	    startForegroundCompat(NOTIFICATION, backgroundSvcNotify);
+	    Notification foregroundSvcNotify = new Notification(R.drawable.svc_icon,
+	    		getString(R.string.svcRunning), when);
+	    
+	    //give the notification an intent so it links to something 
+	    //also if this code is missing it crashes the system. sweet.
+	    PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0, 
+	    		new Intent(ctx, HomeTabbed.class), 0);
+	    foregroundSvcNotify.setLatestEventInfo(ctx, getString(R.string.svcTitle),
+	    		getText(R.string.svcRunning), contentIntent);
+	    
+	    //Run the service in the foreground using the compatibility method
+	    startForegroundCompat(NOTIFICATION, foregroundSvcNotify);
 	}
 	
 	@Override
@@ -227,6 +242,10 @@ public class GpsService extends Service{
 		
 		public boolean isLogging() {
 			return GpsService.this.isLogging;
+		}
+		
+		public void bringToForeground() {
+			GpsService.this.bringToForeground();
 		}
 	};
 		
