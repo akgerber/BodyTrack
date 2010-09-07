@@ -6,4 +6,3 @@ x listview review
 fix listview refreshs
 insert uploading into separate thread rather than blocking UI
 x set up service properly as a foreground service
-add graphics/deuglify icon

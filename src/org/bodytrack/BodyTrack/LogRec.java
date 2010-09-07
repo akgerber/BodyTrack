@@ -2,6 +2,8 @@ package org.bodytrack.BodyTrack;
 
 import java.util.Date;
 
+import org.json.JSONArray;
+
 /**
  * This class implements the LogRec specification given in the BodyTrack
  * Google Docs folder
@@ -44,5 +46,9 @@ public abstract class LogRec {
 	
 	/** the date/time this logrec ends; should be null if chunked is false */
 	public static Date endDate;
-		
+	
+	/** this should be overridden to serialize the logrec as json*/
+	public JSONArray toJson(){
+		return null;
+	}
 }
