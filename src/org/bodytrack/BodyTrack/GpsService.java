@@ -74,6 +74,11 @@ public class GpsService extends Service{
 	    }
 	}
 	
+	/**
+	 * Run the service in the foreground so Android won't kill it.
+	 * For use while logging.
+	 * Shows a notification telling the user what's burning up battery power.
+	 */
 	private void bringToForeground() {
 		Context ctx = getApplicationContext();
 		
@@ -109,9 +114,13 @@ public class GpsService extends Service{
 	private void startLogging() {
     	Log.v(TAG, "Starting GPS logging");
 
+    	/*Bring service to foreground*/
+    	bringToForeground();
+    	
 		/*Register the location listener with the location manager*/
 		if (!isLogging) {
 			locMan.requestLocationUpdates(LocationManager.GPS_PROVIDER, minTime, minDistance, locListen);
+			locMan.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, minTime, minDistance, locListen);
 		}
 		isLogging = true;
 	}
@@ -119,6 +128,9 @@ public class GpsService extends Service{
 	private void stopLogging() {
     	Log.v(TAG, "Stopping GPS logging");
 
+    	/*Leave foreground state*/
+	    stopForegroundCompat(NOTIFICATION);
+    	
 		/*Stop getting location updates*/
 		if (isLogging) {
 			locMan.removeUpdates(locListen);
@@ -179,7 +191,7 @@ public class GpsService extends Service{
 
 	    // Fall back on the old API.  Note to cancel BEFORE changing the
 	    // foreground state, since we could be killed at that point.
-	    mNM.cancel(id);
+	    notMan.cancel(id);
 	    setForeground(false);
 	}
 
@@ -241,10 +253,6 @@ public class GpsService extends Service{
 		
 		public boolean isLogging() {
 			return GpsService.this.isLogging;
-		}
-		
-		public void bringToForeground() {
-			GpsService.this.bringToForeground();
 		}
 	};
 		

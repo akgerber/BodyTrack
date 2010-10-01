@@ -4,7 +4,6 @@ package org.bodytrack.BodyTrack;
 */
 
 interface IGPSSvcRPC {
-	void bringToForeground();
 	void startLogging();
 	void stopLogging();
 	boolean isLogging();

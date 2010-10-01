@@ -42,10 +42,10 @@ public abstract class LogRec {
 	public static String channelName;
 	
 	/** the date/time this logrec began */
-	public static Date date;
+	public Date date;
 	
 	/** the date/time this logrec ends; should be null if chunked is false */
-	public static Date endDate;
+	public Date endDate;
 	
 	/** this should be overridden to serialize the logrec as json*/
 	public JSONArray toJson(){

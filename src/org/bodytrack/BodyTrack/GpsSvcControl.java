@@ -22,6 +22,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.RemoteException;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
@@ -36,11 +37,7 @@ import android.widget.Toast;
 
 public class GpsSvcControl extends Activity{
 	public static final String TAG = "GpsSvcControl";
-	
-	private static final String RUNNINGKEY = "SvcRunning";
-	
-	private boolean svcRunning;
-	
+			
 	private Button gpsSvcStartButton;
 	private Button gpsSvcStopButton;
 	private Button gpsShowButton;
@@ -52,6 +49,7 @@ public class GpsSvcControl extends Activity{
 	protected SharedPreferences prefs;
 	protected String dumpAddress;
 	
+	private IGPSSvcRPC gpsBinder;
 	
     /** Called when the activity is first created. */
     @Override
@@ -60,13 +58,7 @@ public class GpsSvcControl extends Activity{
         
         Log.v(TAG, "Starting GpsSvcControl activity");
         setContentView(R.layout.gpscontrol);
-        
-        //recover whether service is running (false if not present)
-        if (savedInstanceState != null) {
-        	svcRunning = savedInstanceState.getBoolean(RUNNINGKEY, false);
-        }
-        svcRunning = false;
-        
+                
         //Set up buttons
         gpsSvcStartButton = (Button)findViewById(R.id.gpsSvcStartButton);
         gpsSvcStopButton = (Button)findViewById(R.id.gpsSvcStopButton);
@@ -77,13 +69,12 @@ public class GpsSvcControl extends Activity{
         gpsDumpButton = (Button)findViewById(R.id.gpsDumpButton);
         gpsDumpButton.setOnClickListener(dumpData);
         Outbox = (TextView)findViewById(R.id.Outbox);
-        //set service control buttons to appropriate state
-        if (svcRunning) {
-        	gpsSvcStartButton.setEnabled(false);
-        } else {
-        	gpsSvcStopButton.setEnabled(false);
-        }
-
+        
+        //Open/connect to the GPS logging service & check its state
+    	Context ctx = getApplicationContext();
+    	Intent intent = new Intent(ctx, GpsService.class);
+    	ctx.startService(intent);
+    	Boolean bindSuccess = ctx.bindService(intent, sc, 0);
         
         //connect to database
 		dbAdapter = new BTDbAdapter(this).open();
@@ -94,15 +85,6 @@ public class GpsSvcControl extends Activity{
 		Log.v(TAG, "loaded submission address " + dumpAddress + 
 				" from preferences");
 		
-    }
-    
-    
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-    	//record whether the service is running
-    	outState.putBoolean(RUNNINGKEY, svcRunning);
-    	
-    	super.onSaveInstanceState(outState);
     }
     
     @Override
@@ -117,28 +99,38 @@ public class GpsSvcControl extends Activity{
 		super.onResume();
     }
     
+    protected void serviceBound(IGPSSvcRPC binder) {
+        //Log.v(TAG, "Telling GPS service to start. Success? " + bindSuccess);
+    	this.gpsBinder = binder;
+    	try {
+        if (binder.isLogging()) {
+        	gpsSvcStartButton.setEnabled(false);
+        } else {
+        	gpsSvcStopButton.setEnabled(false);
+        }
+        //TODO catch
+    	} catch (Exception e){}
+	
+    }
+    
     private void startGps() {
-    	Context ctx = getApplicationContext();
-    	Intent intent = new Intent(ctx, GpsService.class);
-    	ctx.startService(intent);
-    	Boolean bindSuccess = ctx.bindService(intent, sc, 0);
-        Log.v(TAG, "Telling GPS service to start. Success? " + bindSuccess);
         gpsSvcStartButton.setEnabled(false);
         gpsSvcStopButton.setEnabled(true);
- 
-
+        
+        try {
+        	gpsBinder.startLogging();
+        } catch(Exception e) {
+        	Log.e(TAG, "Failed to start logging in GPS Service; exception: " + e);
+        }
     }
     
     private void stopGps() {
         Log.v(TAG, "Telling GPS service to stop");
 
     	try {
-    		Context ctx = getApplicationContext();
-        	Intent intent = new Intent(this, GpsService.class);
-    		ctx.unbindService(sc);
-    		ctx.stopService(intent);
             gpsSvcStartButton.setEnabled(true);
             gpsSvcStopButton.setEnabled(false);
+            gpsBinder.stopLogging();
     	} catch (Exception e) {
             Log.e(TAG, "Attempting to stop GPS service which wasn't running; exception:" + e.toString());
     	}
@@ -220,21 +212,21 @@ public class GpsSvcControl extends Activity{
 	    	
 	    	geodata.close();
 	    }
-    };   
+    };
     
     private ServiceConnection sc = new ServiceConnection(){
-    	public IGPSSvcRPC gpsBinder;
+    	/*GpsSvcControl parentAct;
+    	
+    	public ServiceConnection(GpsSvcControl parent)
+    	{
+    		parentAct = parent;
+    	}*/
     	
     	@Override
 		public void onServiceConnected(ComponentName svc, IBinder binder) {
+    		gpsBinder = IGPSSvcRPC.Stub.asInterface(binder);
+    		serviceBound(gpsBinder);
 			Log.v(TAG, "Service connected");
-			gpsBinder = IGPSSvcRPC.Stub.asInterface(binder);
-	        try {
-	        	gpsBinder.bringToForeground();
-	        	gpsBinder.startLogging();
-	        } catch(Exception e) {
-	        	Log.e(TAG, "Failed to start logging in GPS Service; exception: " + e);
-	        }
 		}
 
     	@Override
