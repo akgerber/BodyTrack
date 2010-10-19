@@ -4,23 +4,22 @@
       android:versionCode="1"
       android:versionName="1.0">
     <application android:icon="@drawable/icon" android:label="@string/app_name" android:debuggable="true">
-        <activity android:name=".HomeTabbed"
-                  android:label="@string/app_name">
+        <activity android:name=".Activities.HomeTabbed">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-		<activity android:name=".GpsSvcControl">
+		<activity android:name=".Activities.GpsSvcControl">
 		</activity>
-		<activity android:name=".BTPrefs">
+		<activity android:name=".Activities.BTPrefs">
 		</activity>
-		<activity android:name=".CameraActivity"
+		<activity android:name=".Activities.CameraActivity"
 		android:screenOrientation="landscape">
 		</activity>
-		<activity android:name=".CameraReview">
+		<activity android:name=".Activities.CameraReview">
 		</activity>
-		<activity android:name=".BarcodeReview">
+		<activity android:name=".Activities.BarcodeReview">
 		</activity>
 		<service android:name=".GpsService">
 		</service>

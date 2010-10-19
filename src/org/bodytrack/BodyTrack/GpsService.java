@@ -3,6 +3,8 @@ package org.bodytrack.BodyTrack;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import org.bodytrack.BodyTrack.Activities.HomeTabbed;
+
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -26,8 +28,12 @@ public class GpsService extends Service{
 	/*constants*/
 	public static final String TAG = "GpsService";
 	
-	private final long minTime = 1;
+	
+	
+	private final long minTime = 5;
 	private final long minDistance = 10;
+	
+	
 	
 	private LocationListener locListen;
 	private LocationManager locMan;
@@ -187,6 +193,7 @@ public class GpsService extends Service{
 	            Log.w("ApiDemos", "Unable to invoke stopForeground", e);
 	        }
 	        return;
+	        
 	    }
 
 	    // Fall back on the old API.  Note to cancel BEFORE changing the
