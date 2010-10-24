@@ -1,6 +1,6 @@
 package org.bodytrack.BodyTrack.Activities;
 
-import org.bodytrack.BodyTrack.BTDbAdapter;
+import org.bodytrack.BodyTrack.DbAdapter;
 import org.bodytrack.BodyTrack.R;
 import org.bodytrack.BodyTrack.R.id;
 import org.bodytrack.BodyTrack.R.layout;
@@ -28,7 +28,7 @@ public class BarcodeReview extends ListActivity {
 	public static final String TAG = "BarcodeReview";
 	
 	private Button getBarcode;
-	private BTDbAdapter dbAdapter;
+	private DbAdapter dbAdapter;
 	private SimpleCursorAdapter bcAdapter;
 	private Cursor bccursor;
 	
@@ -44,7 +44,7 @@ public class BarcodeReview extends ListActivity {
 		getBarcode.setOnClickListener(mGetBarcode);
 		
         //connect to database
-		dbAdapter = new BTDbAdapter(ctx).open();
+		dbAdapter = new DbAdapter(ctx).open();
 		bccursor = dbAdapter.fetchAllBarcodes();
 		
 		Log.v(TAG, "Got DB adapter");
@@ -54,7 +54,7 @@ public class BarcodeReview extends ListActivity {
 				ctx, //context
 				android.R.layout.simple_list_item_1,
 				bccursor,
-				new String[] {BTDbAdapter.BC_KEY_BARCODE},
+				new String[] {DbAdapter.BC_KEY_BARCODE},
 				new int[] {android.R.id.text1}
 				);
 		setListAdapter(bcAdapter);

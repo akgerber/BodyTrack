@@ -1,6 +1,6 @@
 package org.bodytrack.BodyTrack.Activities;
 
-import org.bodytrack.BodyTrack.BTDbAdapter;
+import org.bodytrack.BodyTrack.DbAdapter;
 import org.bodytrack.BodyTrack.R;
 import org.bodytrack.BodyTrack.R.id;
 import org.bodytrack.BodyTrack.R.layout;
@@ -28,7 +28,7 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback{
 	SurfaceHolder mSurfaceHolder;
 	Camera mCamera;
 	boolean previewRunning;
-	protected BTDbAdapter dbAdapter;
+	protected DbAdapter dbAdapter;
 	
 	@Override
     public void onCreate(Bundle savedInstanceState) {
@@ -51,7 +51,7 @@ public class CameraActivity extends Activity implements SurfaceHolder.Callback{
     	mSurfaceView.setOnClickListener(takePicture);
     	
     	//connect to database
-		dbAdapter = new BTDbAdapter(this).open();
+		dbAdapter = new DbAdapter(this).open();
     }
 
 	private View.OnClickListener takePicture = new View.OnClickListener(){

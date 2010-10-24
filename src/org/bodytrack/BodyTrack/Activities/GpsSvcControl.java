@@ -11,7 +11,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.bodytrack.BodyTrack.BTDbAdapter;
+import org.bodytrack.BodyTrack.DbAdapter;
 import org.bodytrack.BodyTrack.GpsService;
 import org.bodytrack.BodyTrack.IGPSSvcRPC;
 import org.bodytrack.BodyTrack.R;
@@ -47,7 +47,7 @@ public class GpsSvcControl extends Activity{
 	private Button gpsDumpButton;
 	
 	private TextView Outbox;
-	protected BTDbAdapter dbAdapter;
+	protected DbAdapter dbAdapter;
 	
 	protected SharedPreferences prefs;
 	protected String dumpAddress;
@@ -80,7 +80,7 @@ public class GpsSvcControl extends Activity{
     	Boolean bindSuccess = ctx.bindService(intent, sc, 0);
         
         //connect to database
-		dbAdapter = new BTDbAdapter(this).open();
+		dbAdapter = new DbAdapter(this).open();
 		
 		//Load preferences
 		prefs = PreferenceManager.getDefaultSharedPreferences(this);

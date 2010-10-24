@@ -12,8 +12,8 @@ import android.location.Location;
  * This class wraps database operations.
  */
 
-public class BTDbAdapter {
-	public static final String TAG = "BTDbAdapter";
+public class DbAdapter {
+	public static final String TAG = "DbAdapter";
 	
 	private static String DB_NAME = "BodytrackDB";
 	private static int DB_VERSION = 1;
@@ -66,7 +66,7 @@ public class BTDbAdapter {
 	private static class DatabaseHelper extends SQLiteOpenHelper {
 
 		public DatabaseHelper(Context context) {
-			super(context, BTDbAdapter.DB_NAME, null, BTDbAdapter.DB_VERSION);
+			super(context, DbAdapter.DB_NAME, null, DbAdapter.DB_VERSION);
 		}
 
 		@Override
@@ -84,11 +84,11 @@ public class BTDbAdapter {
 		}	
 	}
 	
-	public BTDbAdapter(Context ctx) {
+	public DbAdapter(Context ctx) {
 		this.mCtx = ctx;
 	}
 	
-	public BTDbAdapter open() throws SQLException{
+	public DbAdapter open() throws SQLException{
 		mDbHelper = new DatabaseHelper(mCtx);
 		mDb = mDbHelper.getWritableDatabase();
 		return this;

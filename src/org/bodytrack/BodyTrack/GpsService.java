@@ -39,7 +39,7 @@ public class GpsService extends Service{
 	private LocationManager locMan;
 	private boolean isLogging;
 	
-	protected BTDbAdapter dbAdapter;
+	protected DbAdapter dbAdapter;
 	
 
 	private NotificationManager notMan;
@@ -59,7 +59,7 @@ public class GpsService extends Service{
 		locMan = (LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
 		locListen = new myLocListen();
 		
-		dbAdapter = new BTDbAdapter(this).open();
+		dbAdapter = new DbAdapter(this).open();
 		
 		/*try{
 			gpsFile = openFileOutput("gps.csv", MODE_APPEND);
