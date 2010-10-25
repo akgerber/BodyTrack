@@ -5,7 +5,7 @@ public class Uploader {
 		
 	}
 	
-	public void uploadNewPictures() {
+	void uploadNewPictures() {
 		
 	}
 	

@@ -22,15 +22,15 @@ public class DbAdapter {
 	//Location table creation SQL
     private static final String LOCATION_TABLE_CREATE =
         "create table location (_id integer primary key autoincrement, "
-                + "latitude real not null, longitude real not null, time integer not null,"
+                + "latitude real not null, longitude real not null, time real not null,"
                 + "accuracy real, altitude real, bearing real, provider text,"
                 + "speed real);";
 	//fields of location table    
 	public static final String LOCATION_TABLE = "location";
 	public static final String LOC_KEY_ID = "_id";
+	public static final String LOC_KEY_TIME = "time";
 	public static final String LOC_KEY_LATITUDE = "latitude";
 	public static final String LOC_KEY_LONGITUDE = "longitude";
-	public static final String LOC_KEY_TIME = "time";
 	public static final String LOC_KEY_ACCURACY = "accuracy";
 	public static final String LOC_KEY_ALTITUDE = "altitude";
 	public static final String LOC_KEY_BEARING = "bearing";
@@ -101,9 +101,10 @@ public class DbAdapter {
 	public long writeLocation(Location loc)
 	{
 		ContentValues locToPut = new ContentValues();
+		Double locUnixTime = new Double(loc.getTime()) / new Double(1000);
+		locToPut.put(LOC_KEY_TIME, locUnixTime);
 		locToPut.put(LOC_KEY_LATITUDE, loc.getLatitude());
 		locToPut.put(LOC_KEY_LONGITUDE, loc.getLongitude());
-		locToPut.put(LOC_KEY_TIME, loc.getTime());
 		locToPut.put(LOC_KEY_ACCURACY, loc.getAccuracy());
 		locToPut.put(LOC_KEY_ALTITUDE, loc.getAltitude());
 		locToPut.put(LOC_KEY_BEARING, loc.getBearing());
@@ -113,15 +114,18 @@ public class DbAdapter {
 		return mDb.insert(LOCATION_TABLE, null, locToPut);
 	}
 	
+	
+	//WARNING: TIME MUST BE FIRST COLUMN IN QUERIES. UPLOADER CODE DEPENDS ON THIS
     public Cursor fetchAllLocations() {
-        return mDb.query(LOCATION_TABLE, new String[] {LOC_KEY_LATITUDE, 
-        		LOC_KEY_LONGITUDE, LOC_KEY_TIME, LOC_KEY_ACCURACY, LOC_KEY_ALTITUDE,
+        return mDb.query(LOCATION_TABLE, new String[] {LOC_KEY_TIME, LOC_KEY_LATITUDE, 
+        		LOC_KEY_LONGITUDE, LOC_KEY_ACCURACY, LOC_KEY_ALTITUDE,
         		LOC_KEY_BEARING, LOC_KEY_PROVIDER, LOC_KEY_SPEED},
                 null, null, null, null, LOC_KEY_TIME);
     }
     
+	//WARNING: TIME MUST BE FIRST COLUMN IN QUERIES. UPLOADER CODE DEPENDS ON THIS
     public Cursor fetchAllBarcodes() {
-        return mDb.query(BARCODE_TABLE, new String[] {BC_KEY_ID, BC_KEY_BARCODE, BC_KEY_TIME},
+        return mDb.query(BARCODE_TABLE, new String[] {BC_KEY_TIME, BC_KEY_ID, BC_KEY_BARCODE},
                 null, null, null, null, BC_KEY_TIME);
     }
     

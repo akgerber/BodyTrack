@@ -171,25 +171,28 @@ public class GpsSvcControl extends Activity{
 	    	//create a json array to put it in
 	    	JSONArray data = new JSONArray();
 	    	
-	    	//iterate through location data in db
+	    	//reset database cursor
 	    	geodata.moveToFirst();
-	    	String [] namesArr = geodata.getColumnNames();
-	    	List <String> columns = Arrays.asList(namesArr);
-	    	JSONArray jsonColumns = new JSONArray(columns);
-	    	data.put(jsonColumns);
+	    	
+	    	//grab column names as a List for iterating
+	    	String [] channelNamesArr = geodata.getColumnNames();
+	    	List <String> channelNames = Arrays.asList(channelNamesArr);
 
 	    	while (geodata.isAfterLast() == false) {
 	    		ArrayList<String> fields= new ArrayList<String>();
-		    	for (String name : namesArr) {
+		    	for (String name : channelNames) {
 		    		fields.add(geodata.getString(geodata.getColumnIndex(name)));
 		    	}
 		    	JSONArray jsonFields = new JSONArray(fields);
 		    	data.put(jsonFields);
 	    		geodata.moveToNext();
 	    	}
-
 	    	
-
+	    	//get list of column names ready to send as upload: format & make JSON
+	    	//remove "time" column from list since BT protocol assumes time in first column
+	    	List <String> channelNamesNoTime = channelNames.subList(1, channelNames.size());
+	    	JSONArray channelNamesJson = new JSONArray(channelNamesNoTime);
+	    	
 	    	//make an http request
 	    	HttpClient mHttpClient = new DefaultHttpClient();
 	    	HttpPost postToServer = new HttpPost(dumpAddress);
@@ -201,6 +204,7 @@ public class GpsSvcControl extends Activity{
 		    	postRequest.add(new BasicNameValuePair("source_id", "00:00:00:00:00/location"));
 		    	postRequest.add(new BasicNameValuePair("sensor_nickname", "phone location"));
 		    	postRequest.add(new BasicNameValuePair("timezone", "utc"));//TODO:: make real
+		    	postRequest.add(new BasicNameValuePair("channel_names", channelNamesJson.toString()));
 		    	postRequest.add(new BasicNameValuePair("data", data.toString()));
 		    	
 	    		postToServer.setEntity(new UrlEncodedFormEntity(postRequest));
