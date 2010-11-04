@@ -14,6 +14,9 @@ import android.location.Location;
 
 public class DbAdapter {
 	public static final String TAG = "DbAdapter";
+	public static enum sqlTypes {
+		INTEGER, REAL, TEXT
+	}
 	
 	private static String DB_NAME = "BodytrackDB";
 	private static int DB_VERSION = 1;
