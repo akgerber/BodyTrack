@@ -29,7 +29,6 @@ public class GpsService extends Service{
 	public static final String TAG = "GpsService";
 	
 	
-	
 	private final long minTime = 5;
 	private final long minDistance = 10;
 	

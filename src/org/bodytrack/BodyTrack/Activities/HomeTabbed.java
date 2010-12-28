@@ -45,6 +45,11 @@ public class HomeTabbed extends TabActivity {
 	    spec = tabHost.newTabSpec("barcode").setIndicator("Barcodes")
 	    	.setContent(intent);
 	    tabHost.addTab(spec);
+	    
+	    intent = new Intent().setClass(this, Accelerometer.class);
+	    spec = tabHost.newTabSpec("accelerometer").setIndicator("Accelerometer")
+	    		.setContent(intent);
+	    tabHost.addTab(spec);
 
 
 	}	

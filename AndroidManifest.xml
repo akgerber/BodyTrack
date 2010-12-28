@@ -20,10 +20,13 @@
 		<activity android:name=".Activities.CameraReview">
 		</activity>
 		<activity android:name=".Activities.BarcodeReview">
-		</activity>
-		<service android:name=".GpsService">
+		
+</activity>
+		
+		<activity android:name=".Activities.Accelerometer"></activity><service android:name=".GpsService">
 		</service>
-	</application>
+	
+</application>
     <uses-sdk android:minSdkVersion="4" />
 	<uses-permission android:name="android.permission.CAMERA" />
 	<uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
