@@ -37,6 +37,7 @@ import android.widget.Toast;
  * This class defines an activity that provides the user control over the GPS
  * service. 
  */
+//https://bodytrack.org/users/UID/upload
 
 public class GpsSvcControl extends Activity{
 	public static final String TAG = "GpsSvcControl";

@@ -61,6 +61,18 @@ public class DbAdapter {
 	public static final String	PIX_KEY_TIME = "time";
 	public static final String PIX_KEY_PIC = "pic";
 
+	//Accelerometer table creation
+	   private static final String ACCEL_TABLE_CREATE =
+	        "create table accel (_id integer primary key autoincrement, "
+	                + "time integer not null, xvalue integer not null, yvalue integer not null, " +
+	                		"zvalue integer not null);";
+	//fields of Accelerometer
+	   public static final String ACCEL_TABLE = "accel";
+	   public static final String ACCEL_KEY_ID = "_id";
+	   public static final String ACCEL_KEY_TIME = "time";
+	   public static final String ACCEL_KEY_X = "xvalue";
+	   public static final String ACCEL_KEY_Y = "yvalue";
+	   public static final String ACCEL_KEY_Z = "zvalue";
     
     private DatabaseHelper mDbHelper;
     private Context mCtx;
@@ -78,6 +90,7 @@ public class DbAdapter {
 			db.execSQL(LOCATION_TABLE_CREATE);
 			db.execSQL(BARCODE_TABLE_CREATE);
 			db.execSQL(PIX_TABLE_CREATE);
+			db.execSQL(ACCEL_TABLE_CREATE);
 
 		}
 
@@ -151,5 +164,19 @@ public class DbAdapter {
 		return mDb.insert(PIX_TABLE, null, picToPut);
 	}
 	
+	public Cursor fetchAccelerometer()
+	{
+		return mDb.query(ACCEL_TABLE, new String[]{ACCEL_KEY_TIME, ACCEL_KEY_ID, ACCEL_KEY_X,ACCEL_KEY_Y, ACCEL_KEY_Z},null, null, null, null, ACCEL_KEY_TIME);
+	}
 	
+	public long writeAccel(Float[] values)
+	{
+		ContentValues accelToPut = new ContentValues();
+		accelToPut.put(ACCEL_KEY_X, values[0]);
+		accelToPut.put(ACCEL_KEY_Y, values[1]);
+		accelToPut.put(ACCEL_KEY_Z, values[2]);
+		accelToPut.put(ACCEL_KEY_TIME, System.currentTimeMillis());
+		
+		return mDb.insert(ACCEL_TABLE, null, accelToPut);
+	}
 }
