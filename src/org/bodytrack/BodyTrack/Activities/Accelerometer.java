@@ -27,6 +27,7 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -42,6 +43,7 @@ public class Accelerometer extends Activity implements SensorEventListener{
 	Timer time;
 	Handler handler = new Handler();
 	Button sendData; 
+	ArrayList<String> data = new ArrayList<String>();
 	Float[] accelValue = new Float[3];
 	String dumpAddress = "http://bodytrack.org/users/14/upload";
 	protected DbAdapter dbAdapter; 
@@ -55,6 +57,7 @@ public class Accelerometer extends Activity implements SensorEventListener{
 	{
 	super.onCreate(savedInstanceState);
 	setContentView(R.layout.accel);
+	dbAdapter = new DbAdapter(this).open();
     manager = (SensorManager) getSystemService(SENSOR_SERVICE);
     title = (TextView) findViewById(R.id.title);
     title.setText("Accelerometer");
@@ -66,14 +69,15 @@ public class Accelerometer extends Activity implements SensorEventListener{
     sendData.setOnClickListener(upload);
     time = new Timer();
     //This is the timer that sends the data after every 15 seconds.
-    time.schedule(new TimerTask()
+    time.scheduleAtFixedRate(new TimerTask()
     {
     	public void run()
     	{
     	handler.post(new Runnable(){
     	public void run()
     	{
-    		sendData();
+    		dbAdapter.writeQuery("AccelX,AccelY,AccelZ", data);
+    		data.clear();
     	}
     	});
     	}
@@ -99,9 +103,7 @@ public class Accelerometer extends Activity implements SensorEventListener{
 		/**accelX.setText("X: " + Float.toString(event.values[0]));
 		accelY.setText("Y: " +  Float.toString(event.values[1]));
 		accelZ.setText("Z: " + Float.toString(event.values[2]));**/
-		accelValue[0] = event.values[0];
-		accelValue[1] = event.values[1];
-		accelValue[2] = event.values[2];
+		writeToArray(event.values);
 	}
 
 	@Override
@@ -126,42 +128,19 @@ public class Accelerometer extends Activity implements SensorEventListener{
 		manager.unregisterListener(this, manager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER));
 		super.onPause();
 	}
-	/**
+	/*=
 	 * This is for testing to see if the data is actually sent.
 	 */
 	private Button.OnClickListener upload = new Button.OnClickListener(){
 		public void onClick(View v)
 		{
-			sendData();
 		}
 	};
-	/**
-	 * This sends the data to the database.
-	 */
-	public void sendData()
+	public void writeToArray(float[] values)
 	{
-	WifiManager wifi = (WifiManager) getSystemService(Context.WIFI_SERVICE);
-	WifiInfo info =  wifi.getConnectionInfo();
-	JSONArray data = new JSONArray();
-	for(int i=0; i < accelValue.length; i++)
-	{
-	data.put(accelValue[i]);
-	}
-	HttpClient mHttpClient = new DefaultHttpClient();
-	HttpPost postToServer = new HttpPost(dumpAddress);
-	try {
-		List<NameValuePair> postRequest = new ArrayList<NameValuePair>();
-		Toast.makeText(Accelerometer.this, info.getMacAddress(), Toast.LENGTH_SHORT).show();
-    	postRequest.add(new BasicNameValuePair("device_id",info.getMacAddress()));
-    	postRequest.add(new BasicNameValuePair("timezone", Long.toString(System.currentTimeMillis())));
-    	postRequest.add(new BasicNameValuePair("data", data.toString()));
-    	
-		postToServer.setEntity(new UrlEncodedFormEntity(postRequest));
-		HttpResponse response = mHttpClient.execute(postToServer);
-		Toast.makeText(Accelerometer.this, response.toString(),
-				Toast.LENGTH_SHORT).show();	  
-	} catch (Exception e) {
-		e.printStackTrace();
-	}
+		long time = System.currentTimeMillis();
+		int number = (int) (time/1000);
+		int last_num = (int) (time% 1000);
+		data.add(Integer.toString(number)+ "." + Integer.toString(last_num) + "," + Float.toString(values[0]) + "," + Float.toString(values[1])+ ","+ Float.toString(values[2]));
 	}
 }

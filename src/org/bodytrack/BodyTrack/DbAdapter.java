@@ -1,5 +1,7 @@
 package org.bodytrack.BodyTrack;
 
+import java.util.ArrayList;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -7,6 +9,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.location.Location;
+import android.util.Log;
 
 /**
  * This class wraps database operations.
@@ -23,6 +26,7 @@ public class DbAdapter {
 	
 	
 	//Location table creation SQL
+	
     private static final String LOCATION_TABLE_CREATE =
         "create table location (_id integer primary key autoincrement, "
                 + "latitude real not null, longitude real not null, time real not null,"
@@ -60,6 +64,7 @@ public class DbAdapter {
 	public static final String	PIX_KEY_ID = "_id";
 	public static final String	PIX_KEY_TIME = "time";
 	public static final String PIX_KEY_PIC = "pic";
+	
 
 	//Accelerometer table creation
 	   private static final String ACCEL_TABLE_CREATE =
@@ -73,6 +78,14 @@ public class DbAdapter {
 	   public static final String ACCEL_KEY_X = "xvalue";
 	   public static final String ACCEL_KEY_Y = "yvalue";
 	   public static final String ACCEL_KEY_Z = "zvalue";
+	   
+	   private static final String STACK_TABLE_CREATE =
+	        "create table stack (_id integer primary key autoincrement, "
+	                + "channel text not null, data text not null);";
+		public static final String STACK_TABLE = "stack";
+		public static final String STACK_KEY_ID = "_id";
+		public static final String STACK_KEY_DATA = "data";
+		public static final String STACK_KEY_CHANNEL = "channel";
     
     private DatabaseHelper mDbHelper;
     private Context mCtx;
@@ -91,8 +104,8 @@ public class DbAdapter {
 			db.execSQL(BARCODE_TABLE_CREATE);
 			db.execSQL(PIX_TABLE_CREATE);
 			db.execSQL(ACCEL_TABLE_CREATE);
-
-		}
+			db.execSQL(STACK_TABLE_CREATE);
+			}
 
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -154,7 +167,7 @@ public class DbAdapter {
 		return mDb.insert(BARCODE_TABLE, null, codeToPut);
 	}
 	
-	public long writePicture(byte [] picture) {
+	public long writePicture(byte[] picture) {
 		ContentValues picToPut = new ContentValues();
 		
 		
@@ -163,20 +176,32 @@ public class DbAdapter {
 
 		return mDb.insert(PIX_TABLE, null, picToPut);
 	}
-	
-	public Cursor fetchAccelerometer()
+	public Cursor fetchAllQueries()
 	{
-		return mDb.query(ACCEL_TABLE, new String[]{ACCEL_KEY_TIME, ACCEL_KEY_ID, ACCEL_KEY_X,ACCEL_KEY_Y, ACCEL_KEY_Z},null, null, null, null, ACCEL_KEY_TIME);
+		return mDb.query(STACK_TABLE, new String[]{STACK_KEY_ID,STACK_KEY_CHANNEL,STACK_KEY_DATA},null, null,null,null, STACK_KEY_ID);
 	}
-	
-	public long writeAccel(Float[] values)
+	//TODO: Need to parse the string correctly for the database (group timestamp, X,Y,Z)
+	public long writeQuery(String channelName, ArrayList<String> values)
 	{
-		ContentValues accelToPut = new ContentValues();
-		accelToPut.put(ACCEL_KEY_X, values[0]);
-		accelToPut.put(ACCEL_KEY_Y, values[1]);
-		accelToPut.put(ACCEL_KEY_Z, values[2]);
-		accelToPut.put(ACCEL_KEY_TIME, System.currentTimeMillis());
-		
-		return mDb.insert(ACCEL_TABLE, null, accelToPut);
+		String data = "";
+		for(int i=0; i < values.size(); i++)
+		{
+			if((i+1) == values.size())
+			{
+				data = data + values.get(i);
+			}
+			else
+			{
+				data = data + values.get(i) + ",";
+			}
+		}
+		ContentValues queryToPut = new ContentValues();
+		queryToPut.put(STACK_KEY_CHANNEL, channelName);
+		queryToPut.put(STACK_KEY_DATA, data);
+		return mDb.insert(STACK_TABLE,null, queryToPut);
+	}
+
+	public int delete(int stackId) {
+		return mDb.delete(STACK_TABLE, "_id=" + stackId,null);
 	}
 }

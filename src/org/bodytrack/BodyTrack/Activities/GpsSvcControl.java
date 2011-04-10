@@ -11,6 +11,7 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 import org.bodytrack.BodyTrack.DbAdapter;
 import org.bodytrack.BodyTrack.GpsService;
 import org.bodytrack.BodyTrack.IGPSSvcRPC;
@@ -71,7 +72,7 @@ public class GpsSvcControl extends Activity{
         gpsShowButton = (Button)findViewById(R.id.gpsShowButton);
         gpsShowButton.setOnClickListener(showData);
         gpsDumpButton = (Button)findViewById(R.id.gpsDumpButton);
-        gpsDumpButton.setOnClickListener(dumpData);
+       // gpsDumpButton.setOnClickListener(dumpData);
         Outbox = (TextView)findViewById(R.id.Outbox);
         
         //Open/connect to the GPS logging service & check its state
@@ -163,7 +164,7 @@ public class GpsSvcControl extends Activity{
 	    }
     };
     
-    //TODO: moved all uploading to DB adapter? sure shouldn't be here
+  /**  //TODO: moved all uploading to DB adapter? sure shouldn't be here
     private Button.OnClickListener dumpData = new Button.OnClickListener(){
 	    public void onClick(View v) {
 	    	//grab location data cursor from database
@@ -176,7 +177,7 @@ public class GpsSvcControl extends Activity{
 	    	geodata.moveToFirst();
 	    	
 	    	//grab column names as a List for iterating
-	    	String [] channelNamesArr = geodata.getColumnNames();
+	    	String[] channelNamesArr = geodata.getColumnNames();
 	    	List <String> channelNames = Arrays.asList(channelNamesArr);
 
 	    	while (geodata.isAfterLast() == false) {
@@ -186,6 +187,8 @@ public class GpsSvcControl extends Activity{
 		    	}
 		    	JSONArray jsonFields = new JSONArray(fields);
 		    	data.put(jsonFields);
+		    	Toast.makeText(GpsSvcControl.this, "This is the response: " + data.toString(),
+	    				Toast.LENGTH_SHORT).show();	 
 	    		geodata.moveToNext();
 	    	}
 	    	
@@ -193,7 +196,6 @@ public class GpsSvcControl extends Activity{
 	    	//remove "time" column from list since BT protocol assumes time in first column
 	    	List <String> channelNamesNoTime = channelNames.subList(1, channelNames.size());
 	    	JSONArray channelNamesJson = new JSONArray(channelNamesNoTime);
-	    	
 	    	//make an http request
 	    	HttpClient mHttpClient = new DefaultHttpClient();
 	    	HttpPost postToServer = new HttpPost(dumpAddress);
@@ -205,22 +207,18 @@ public class GpsSvcControl extends Activity{
 		    	postRequest.add(new BasicNameValuePair("source_id", "00:00:00:00:00/location"));
 		    	postRequest.add(new BasicNameValuePair("sensor_nickname", "phone location"));
 		    	postRequest.add(new BasicNameValuePair("timezone", "utc"));//TODO:: make real
-		    	postRequest.add(new BasicNameValuePair("channel_names", channelNamesJson.toString()));
-		    	postRequest.add(new BasicNameValuePair("data", data.toString()));
-		    	
+		    	postRequest.add(new BasicNameValuePair("channel_names", channelNamesJson.toString())); 
+		    	postRequest.add(new BasicNameValuePair("data", data.toString()));	
 	    		postToServer.setEntity(new UrlEncodedFormEntity(postRequest));
 	    		HttpResponse response = mHttpClient.execute(postToServer);
-				Toast.makeText(GpsSvcControl.this, response.toString(),
-						Toast.LENGTH_SHORT).show();	  
+	    		Toast.makeText(GpsSvcControl.this, "This is the response: " + EntityUtils.toString(response.getEntity()),
+	    				Toast.LENGTH_SHORT).show();	  
 	    	} catch (Exception e) {
 	    		e.printStackTrace();
 	    	}
-	    	
-	    	
-	    	
 	    	geodata.close();
 	    }
-    };
+    };**/
     
     private ServiceConnection sc = new ServiceConnection(){
     	/*GpsSvcControl parentAct;

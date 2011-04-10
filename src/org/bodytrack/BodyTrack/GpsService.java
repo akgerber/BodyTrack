@@ -2,6 +2,7 @@ package org.bodytrack.BodyTrack;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 
 import org.bodytrack.BodyTrack.Activities.HomeTabbed;
 
@@ -215,9 +216,15 @@ public class GpsService extends Service{
 	private class myLocListen implements LocationListener{
 
 		public void onLocationChanged(Location loc) {
-			Log.v(TAG, "Location changed. Location: " + loc);
-			
-			Long result = dbAdapter.writeLocation(loc);
+			//Log.v(TAG, "Location changed. Location: " + loc);
+			ArrayList<String> values = new ArrayList<String>();
+			long time = System.currentTimeMillis();
+			int number = (int) (time/1000);
+			int last_num = (int) (time% 1000);
+			values.add(Integer.toString(number) + "." + Integer.toString(last_num)+ "," + loc.getLatitude() + "," + loc.getLongitude() + "," 
+			+ loc.getAccuracy() + "," + loc.getAltitude() + "," + loc.getBearing() + "," + 
+			loc.getProvider() + "," + loc.getSpeed());
+			Long result = dbAdapter.writeQuery("Latitude,Longitute,Accuracy,Altitude,Bearing,Provider,Speed", values);
 			if (result == -1) {
 				Log.e(TAG, "Failed to write location to DB!");
 			}

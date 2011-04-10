@@ -13,7 +13,7 @@ import android.widget.Button;
 
 /**
  * This class defines an activity that allows the user to review
- * previously taken (meal) photos and haas a button to take new
+ * previously taken (meal) photos and has a button to take new
  * ones.
  */
 public class CameraReview extends Activity {
